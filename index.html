@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rabit — See the consequence before the action</title>
+<meta name="description" content="Rabit predicts what an AI agent's action will do — reversible or not, how far it reaches — before it runs. The dangerous ones wait for a human. Everything else flows.">
+<link rel="canonical" href="https://rabit.is/">
+<!-- Open Graph / social share card -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Rabit">
+<meta property="og:url" content="https://rabit.is/">
+<meta property="og:title" content="Rabit — See the consequence before the action">
+<meta property="og:description" content="We predict what an agent's action will do — before it runs. The dangerous ones wait for a human. Everything else flows.">
+<meta property="og:image" content="https://rabit.is/rabit_og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Rabit — the consequence layer for AI agents. See the consequence before the action.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Rabit — See the consequence before the action">
+<meta name="twitter:description" content="We predict what an agent's action will do — before it runs.">
+<meta name="twitter:image" content="https://rabit.is/rabit_og.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0B0D; --bg2:#0E1116; --panel:#14171E; --panel2:#191D26;
+  --text:#EDEFF3; --lead:#B7BDC8; --muted:#7E8592; --faint:#565C68;
+  --teal:#43E0C4; --teal-soft:rgba(67,224,196,.12);
+  --allow:#5FCB98; --hold:#E6A338; --block:#E5615A;
+  --line:rgba(255,255,255,.08); --line-soft:rgba(255,255,255,.045);
+  --display:'Space Grotesk',sans-serif; --body:'IBM Plex Sans',sans-serif; --mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.55;overflow-x:hidden}
+::selection{background:var(--teal);color:#05221c}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:5px}
+
+/* ---------------- hero glow + point-cloud + texture ---------------- */
+#coreglow{position:fixed;left:50%;top:41%;width:48vmax;height:48vmax;transform:translate(-50%,-50%);z-index:0;pointer-events:none;
+  background:radial-gradient(circle, rgba(67,224,196,.16), rgba(67,224,196,.05) 32%, transparent 62%);filter:blur(24px);
+  animation:pulse 11s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(1)}50%{opacity:.92;transform:translate(-50%,-50%) scale(1.05)}}
+#orb{position:fixed;inset:0;z-index:0;display:block;pointer-events:none}
+/* film grain */
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E")}
+/* vignette to seat content */
+.vig{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(130% 120% at 50% 28%, transparent 54%, rgba(6,8,11,.6) 100%)}
+#progress{position:fixed;top:0;left:0;height:2px;width:0%;background:linear-gradient(90deg,transparent,var(--teal));z-index:60;box-shadow:0 0 10px rgba(67,224,196,.4)}
+
+/* ---------------- nav ---------------- */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+  padding:22px clamp(20px,4vw,60px);transition:padding .35s ease, background .35s ease, border-color .35s ease;border-bottom:1px solid transparent}
+nav.scrolled{background:rgba(10,12,16,.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom-color:var(--line-soft);padding-top:13px;padding-bottom:13px}
+.logo{display:flex;align-items:center;gap:11px;font-family:var(--mono);font-weight:600;letter-spacing:.26em;font-size:13px;text-decoration:none;color:var(--text)}
+.logo-mark{height:20px;width:auto;display:block;transition:transform .4s cubic-bezier(.4,0,.2,1)}
+.logo:hover .logo-mark{transform:scale(1.08)}
+.nav-links{display:flex;gap:clamp(18px,2.6vw,34px);align-items:center}
+.nav-links a{font-family:var(--mono);font-size:12px;letter-spacing:.05em;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.btn{font-family:var(--mono);font-size:12px;letter-spacing:.04em;padding:11px 20px;border-radius:9px;text-decoration:none;
+  transition:transform .22s ease, box-shadow .22s ease, background .22s ease, border-color .22s ease, color .22s ease;
+  white-space:nowrap;font-weight:500;display:inline-block;cursor:pointer}
+.btn-solid{color:#04211b;background:var(--teal);border:1px solid var(--teal)}
+.btn-solid:hover{background:#57e7cf;border-color:#57e7cf;transform:translateY(-1px);box-shadow:0 10px 34px -14px rgba(67,224,196,.6)}
+.btn-solid:active{transform:translateY(0);box-shadow:0 4px 16px -10px rgba(67,224,196,.6)}
+@media(max-width:860px){.nav-links a:not(.btn){display:none}}
+
+/* ---------------- shared ---------------- */
+section{position:relative;z-index:2}
+.wrap{max-width:1180px;margin:0 auto;padding:clamp(92px,13vh,164px) clamp(20px,4vw,60px)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--teal);display:inline-flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--teal);opacity:.7}
+h2{font-family:var(--display);font-weight:600;font-size:clamp(30px,4.2vw,50px);line-height:1.07;letter-spacing:-.022em;margin-top:19px;max-width:940px;text-wrap:balance}
+h2 .a{color:var(--teal)}
+.sub{font-size:clamp(15.5px,1.5vw,18px);color:var(--lead);max-width:64ch;margin-top:20px;line-height:1.62;text-wrap:pretty}
+.kick{font-family:var(--display);font-weight:500;font-size:clamp(18px,2.15vw,26px);letter-spacing:-.012em;line-height:1.36;color:var(--text);
+  margin-top:clamp(42px,6vh,70px);padding-top:28px;border-top:1px solid var(--line-soft);max-width:900px;text-wrap:balance}
+.kick .a{color:var(--teal)}
+
+/* ---------------- hero ---------------- */
+#hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;text-align:center;
+  padding:0 clamp(20px,4vw,54px) clamp(60px,10vh,116px);position:relative;z-index:5}
+#hero::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(60% 48% at 50% 54%, rgba(10,11,13,.76), rgba(10,11,13,.42) 46%, transparent 74%)}
+#hero .wrap{position:relative;z-index:1}
+.hero-inner{width:100%;max-width:900px;margin:0 auto;display:flex;flex-direction:column;align-items:center}
+.h-eyebrow{font-family:var(--mono);font-size:clamp(10px,1vw,11.5px);letter-spacing:.36em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--display);font-weight:500;font-size:clamp(35px,5.8vw,74px);line-height:1.03;letter-spacing:-.03em;margin-top:22px;max-width:15ch;text-wrap:balance}
+h1 .a{color:var(--teal)}
+.h-sub{font-size:clamp(15px,1.5vw,18px);color:var(--lead);max-width:53ch;margin-top:22px;line-height:1.62;text-wrap:pretty}
+.h-sub b{color:var(--text);font-weight:500}
+.h-ctas{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap;justify-content:center}
+.h-ctas .btn{font-size:13px;padding:15px 30px}
+.scrollhint{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:5;font-family:var(--mono);font-size:9.5px;letter-spacing:.34em;color:var(--faint);display:flex;flex-direction:column;align-items:center;gap:10px}
+.scrollhint i{width:1px;height:34px;background:linear-gradient(var(--teal),transparent);animation:drip 2.4s ease-in-out infinite;transform-origin:top;opacity:.7}
+@keyframes drip{0%{transform:scaleY(0)}45%{transform:scaleY(1)}45.1%{transform-origin:bottom}90%,100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ---------------- problem ---------------- */
+.statline{display:flex;align-items:flex-start;gap:clamp(26px,4vw,58px);margin-top:clamp(42px,6vh,66px);flex-wrap:wrap}
+.bignum{font-family:var(--display);font-weight:600;font-size:clamp(80px,12vw,168px);line-height:.82;color:var(--block);letter-spacing:-.045em;font-variant-numeric:tabular-nums}
+.statcap{max-width:400px;padding-top:14px}
+.statcap p{font-size:clamp(15px,1.5vw,18px);color:var(--text);line-height:1.5}
+.statcap .src{font-family:var(--mono);font-size:11px;color:var(--faint);margin-top:15px;line-height:1.55}
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:clamp(48px,7vh,78px)}
+.card{background:linear-gradient(180deg,rgba(25,29,38,.5),rgba(20,23,30,.28));border:1px solid var(--line);border-radius:14px;padding:28px 26px;
+  transition:border-color .3s ease, transform .3s ease, background .3s ease}
+.card:hover{border-color:rgba(255,255,255,.16);transform:translateY(-3px);background:linear-gradient(180deg,rgba(28,33,43,.56),rgba(20,23,30,.32))}
+.card .t{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.card h3{font-family:var(--display);font-size:clamp(18px,1.9vw,22px);font-weight:500;margin-top:14px;line-height:1.2;letter-spacing:-.01em}
+.card p{font-size:14px;color:var(--muted);margin-top:11px;line-height:1.6}
+.card .x{font-family:var(--mono);font-size:11px;color:var(--block);margin-top:18px;opacity:.85;letter-spacing:.02em}
+@media(max-width:860px){.cards3{grid-template-columns:1fr}}
+
+/* ---------------- how it works ---------------- */
+.step{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,5vw,72px);align-items:center;padding:clamp(52px,8vh,96px) 0;border-bottom:1px solid var(--line-soft)}
+.step:last-of-type{border-bottom:none}
+.num{font-family:var(--mono);font-size:clamp(46px,6vw,78px);font-weight:500;color:transparent;-webkit-text-stroke:1px rgba(67,224,196,.42);line-height:1;letter-spacing:.02em}
+.step h3{font-family:var(--display);font-size:clamp(24px,3vw,35px);font-weight:600;line-height:1.1;margin-top:16px;letter-spacing:-.018em;text-wrap:balance}
+.step .p{font-size:clamp(14.5px,1.45vw,16.5px);color:var(--lead);margin-top:16px;line-height:1.66;max-width:520px;text-wrap:pretty}
+.step .p b{color:var(--text);font-weight:500}
+.fine{font-family:var(--mono);font-size:11.5px;color:var(--faint);margin-top:18px;line-height:1.65;max-width:500px}
+.tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--hold);
+  border:1px solid rgba(230,163,56,.4);border-radius:7px;padding:6px 11px;margin-top:18px;background:rgba(230,163,56,.05)}
+.tag::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--hold);box-shadow:0 0 8px rgba(230,163,56,.7);flex:0 0 auto}
+.step:nth-of-type(even) .copy{order:2}
+@media(max-width:860px){.step{grid-template-columns:1fr;gap:26px}.step:nth-of-type(even) .copy{order:0}}
+
+.viz{background:rgba(13,16,21,.72);border:1px solid var(--line);border-radius:15px;padding:22px;font-family:var(--mono);
+  box-shadow:0 30px 70px -40px rgba(0,0,0,.85), inset 0 1px 0 rgba(255,255,255,.03)}
+.viz .lab{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);display:flex;align-items:center;gap:8px}
+.viz .lab::before{content:"";width:12px;height:1px;background:var(--faint)}
+.viz .in{font-size:12.5px;color:var(--lead);margin-top:9px;line-height:1.5}.viz .in b{color:var(--text)}
+.arw{color:rgba(67,224,196,.5);text-align:center;margin:11px 0;font-size:13px}
+.model{border:1px solid rgba(67,224,196,.5);border-radius:11px;padding:15px;text-align:center;
+  background:linear-gradient(180deg,rgba(67,224,196,.08),rgba(67,224,196,.015));box-shadow:0 0 44px -16px rgba(67,224,196,.5), inset 0 1px 0 rgba(67,224,196,.14)}
+.model .f{font-size:15px;color:var(--text);font-weight:600;letter-spacing:.01em}.model .m{font-size:9px;color:var(--muted);margin-top:6px;letter-spacing:.08em;text-transform:uppercase}
+.pred{border:1px dashed rgba(67,224,196,.42);border-radius:11px;padding:4px 15px;margin-top:12px;background:rgba(67,224,196,.02)}
+.pred .r{display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:10px 0;border-bottom:1px solid var(--line-soft);font-size:12px}
+.pred .r>span:last-child{text-align:right}
+.pred .r:last-child>span:last-child{white-space:nowrap}
+.pred .r:last-child{border-bottom:none}
+.pred .k{color:var(--faint);font-size:9px;letter-spacing:.16em;text-transform:uppercase}
+.pred .irr{color:var(--hold);font-weight:600;letter-spacing:.04em}.pred .hold{color:var(--hold);font-weight:600}
+.meter{display:inline-block;width:58px;height:4px;border-radius:2px;background:rgba(255,255,255,.1);position:relative;vertical-align:middle;margin-right:9px;overflow:hidden}
+.meter i{position:absolute;inset:0 auto 0 0;width:93%;border-radius:2px;background:linear-gradient(90deg,var(--teal),#7fecdb)}
+.rts{display:flex;flex-direction:column;gap:12px}
+.rt{display:flex;align-items:center;gap:15px;background:rgba(13,16,21,.66);border:1px solid var(--line);border-radius:12px;padding:16px 18px;font-family:var(--mono);
+  transition:border-color .25s ease, transform .25s ease}
+.rt:hover{border-color:rgba(255,255,255,.15);transform:translateX(3px)}
+.rt .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.rt .v{font-size:12px;font-weight:600;letter-spacing:.1em;min-width:56px}.rt .d{font-size:11.5px;color:var(--muted)}
+.rt.a .dot{background:var(--allow);box-shadow:0 0 11px rgba(95,203,152,.65)}.rt.a .v{color:var(--allow)}
+.rt.h .dot{background:var(--hold);box-shadow:0 0 11px rgba(230,163,56,.65)}.rt.h .v{color:var(--hold)}
+.rt.b .dot{background:var(--block);box-shadow:0 0 11px rgba(229,97,90,.65)}.rt.b .v{color:var(--block)}
+.loop .li{display:flex;gap:15px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line-soft)}
+.loop .li:last-child{border-bottom:none}.loop .n{color:var(--teal);font-weight:600;font-size:12px;min-width:20px;letter-spacing:.04em}
+.loop .lt{font-size:12.5px;color:var(--lead);line-height:1.6}.loop .lt b{color:var(--text)}
+
+/* ---------------- vision ---------------- */
+.vcols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(22px,3.5vw,52px);margin-top:clamp(40px,5vh,62px)}
+.vcol{border-top:1px solid var(--line);padding-top:22px}
+.vcol.next{border-top-color:rgba(67,224,196,.42)}
+.vlab{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.vcol.next .vlab{color:var(--teal)}
+.vcol p{font-size:clamp(14px,1.4vw,16px);color:var(--lead);margin-top:14px;line-height:1.62;max-width:44ch;text-wrap:pretty}
+@media(max-width:860px){.vcols{grid-template-columns:1fr;gap:26px}}
+
+/* ---------------- founder ---------------- */
+.founder{border:1px solid var(--line);border-radius:18px;padding:clamp(28px,3.4vw,40px);
+  background:linear-gradient(160deg,rgba(25,29,38,.55),rgba(14,17,22,.35))}
+.founder.solo{max-width:660px;margin:clamp(40px,5vh,62px) auto 0}
+.founder .who{display:flex;align-items:center;gap:15px}
+.avatar{width:52px;height:52px;border-radius:50%;flex:0 0 auto;border:1px solid var(--line);
+  background:radial-gradient(circle at 35% 30%, #2a3340, #12151b);display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-weight:600;color:var(--teal);font-size:18px;letter-spacing:.02em}
+.founder .nm{font-family:var(--display);font-weight:600;font-size:18px;white-space:nowrap}
+.founder .rl{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.04em;margin-top:4px}
+.fbio{font-size:15px;color:var(--lead);line-height:1.64;margin-top:22px;text-wrap:pretty}
+.socials{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.slink{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:13px;color:var(--lead);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:11px 16px;transition:border-color .2s,color .2s,background .2s}
+.slink:hover{border-color:var(--teal);color:var(--teal);background:rgba(67,224,196,.06)}
+.slink svg{flex:0 0 auto}
+
+/* ---------------- final cta ---------------- */
+#contact .wrap{padding-bottom:80px}
+.final{border:1px solid var(--line);border-radius:22px;padding:clamp(40px,6vw,80px);text-align:center;
+  background:linear-gradient(180deg,rgba(20,23,30,.5),rgba(14,17,22,.28));position:relative;overflow:hidden}
+.final::before{content:"";position:absolute;width:70%;height:200%;left:15%;top:-60%;
+  background:radial-gradient(circle, rgba(67,224,196,.1), transparent 60%);pointer-events:none}
+.final .eyebrow{justify-content:center;display:inline-flex}
+.final h2{margin-left:auto;margin-right:auto}
+.final .sub{margin:20px auto 0}
+.intake{max-width:520px;margin:32px auto 0;text-align:left;position:relative}
+.intake .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.intake .fld{margin-top:14px;display:flex;flex-direction:column}
+.intake .row2 .fld{margin-top:0}
+.intake label{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--muted);margin-bottom:7px}
+.intake input,.intake textarea{width:100%;background:rgba(10,12,16,.6);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--text);font-family:var(--body);font-size:14.5px;transition:border-color .2s,box-shadow .2s}
+.intake input::placeholder,.intake textarea::placeholder{color:var(--faint)}
+.intake input:focus,.intake textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(67,224,196,.14)}
+.intake textarea{resize:vertical;min-height:84px;line-height:1.5}
+.intake-submit{margin-top:18px;width:100%;text-align:center;cursor:pointer;font-size:13.5px;padding:14px;border:1px solid var(--teal)}
+.intake-note{margin-top:14px;font-family:var(--mono);font-size:12.5px;color:var(--teal);text-align:center}
+.intake-alt{margin-top:18px;font-family:var(--mono);font-size:12px;color:var(--muted);position:relative}
+.intake-alt a{color:var(--teal);text-decoration:none}
+.intake-alt a:hover{text-decoration:underline}
+@media(max-width:560px){.intake .row2{grid-template-columns:1fr}.intake .row2 .fld{margin-top:14px}.intake .row2 .fld:first-child{margin-top:0}}
+
+/* ---------------- footer ---------------- */
+footer{position:relative;z-index:2;border-top:1px solid var(--line-soft);padding:36px clamp(20px,4vw,60px);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+footer .fl{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.03em}
+footer .fl a{color:var(--muted);text-decoration:none;transition:color .2s}
+footer .fl a:hover{color:var(--text)}
+footer .tg{font-family:var(--mono);font-size:11px;color:var(--muted)}
+footer .tg b{color:var(--teal);font-weight:600}
+
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  #coreglow,.scrollhint i{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div id="coreglow" aria-hidden="true"></div>
+<canvas id="orb" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="vig" aria-hidden="true"></div>
+<div id="progress" aria-hidden="true"></div>
+
+<nav id="nav" aria-label="Primary">
+  <a class="logo" href="#hero" aria-label="Rabit home">
+    <img class="logo-mark" src="rabit-mark.png" alt="" width="20" height="20">
+    RABIT
+  </a>
+  <div class="nav-links">
+    <a href="#problem">The problem</a>
+    <a href="#how">How it works</a>
+    <a href="#approach">Vision</a>
+    <a href="#contact">Contact</a>
+    <a class="btn btn-solid" href="#contact">Let's talk</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="wrap">
+    <div class="hero-inner">
+      <div class="h-eyebrow" data-r>The consequence layer for AI agents</div>
+      <h1 data-r>See the consequence <span class="a">before</span> the action.</h1>
+      <p class="h-sub" data-r>Rabit predicts what an agent's action will do — reversible or not, how far it reaches — <b>before it runs</b>. The dangerous ones wait for a human. Everything else flows.</p>
+      <div class="h-ctas" data-r>
+        <a class="btn btn-solid" href="#contact">Get in touch</a>
+      </div>
+    </div>
+  </div>
+  <div class="scrollhint"><span>SCROLL</span><i></i></div>
+</section>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="wrap">
+    <div class="eyebrow" data-r>The problem</div>
+    <h2 data-r>Permission isn't safety. <span class="a">Once it's done, it's done.</span></h2>
+    <p class="sub" data-r>An agent can be perfectly authorized to delete a customer, wire a payment, or make a repo public — and still do it at the wrong moment, tricked by a poisoned input or simply wrong. The action fires in milliseconds, before anyone reviews it. The one that hurts you is the one no rule anticipated.</p>
+
+    <div class="statline">
+      <div class="bignum" data-count="88" data-suffix="%">0%</div>
+      <div class="statcap" data-r>
+        <p>of leaders report agent-driven incidents — despite feeling "covered."</p>
+        <div class="src">Source: State of AI Agent Security 2026 — survey of 900+ executives &amp; practitioners.</div>
+      </div>
+    </div>
+
+    <div class="cards3">
+      <div class="card" data-r>
+        <div class="t">Guardrails &amp; classifiers</div>
+        <h3>Pattern-match the past</h3>
+        <p>They match an action's text against known-bad rules — so they only catch what someone already thought to write down. The novel case walks straight through.</p>
+        <div class="x">✕ blind to what it hasn't seen</div>
+      </div>
+      <div class="card" data-r>
+        <div class="t">The model's own reasoning</div>
+        <h3>The fooled brain, judging itself</h3>
+        <p>The same model the attacker just hijacked decides whether it's safe. It produces words, not predictions of what will actually happen — and it's confident when it's wrong.</p>
+        <div class="x">✕ words, not guarantees</div>
+      </div>
+      <div class="card" data-r>
+        <div class="t">Monitoring &amp; observability</div>
+        <h3>Hindsight, after the damage</h3>
+        <p>It records what the action did — after it happened. A camera, not a brake. By the time you see the trace, the data has already left the building.</p>
+        <div class="x">✕ no prevention for irreversible acts</div>
+      </div>
+    </div>
+
+    <div class="kick" data-r>Every layer today checks what an action <span class="a">looks like</span>. None of them check what it <span class="a">will do</span>.</div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="wrap">
+    <div class="eyebrow" data-r>How Rabit works</div>
+    <h2 data-r>We reason about what an action <span class="a">will do</span> — not what it looks like.</h2>
+    <p class="sub" data-r>Consequence-aware by design — a learned world model that predicts an action's effect before it runs.</p>
+
+    <div class="step">
+      <div class="copy">
+        <div class="num" data-r>01</div>
+        <h3 data-r>Predict the resulting state.</h3>
+        <p class="p" data-r>A learned world model reads the live state and the action the agent proposes, and predicts the state it would produce — before it runs. <b>Reversible or not, and how far it reaches</b>, fall straight out.</p>
+        <div class="tag" data-r>world model core · predictor v1 in build</div>
+      </div>
+      <div class="viz" data-r>
+        <div class="lab">Input</div>
+        <div class="in">current state <b>+</b> proposed action &nbsp;·&nbsp; <b>DELETE /customers/4471</b></div>
+        <div class="arw">↓</div>
+        <div class="model"><div class="f">f(state, action)</div><div class="m">predicts the resulting state · advisory</div></div>
+        <div class="arw">↓</div>
+        <div class="pred">
+          <div class="r"><span class="k">reversibility</span><span class="irr">IRREVERSIBLE</span></div>
+          <div class="r"><span class="k">blast radius</span><span style="color:var(--lead)">3 open invoices · $8,400 ARR</span></div>
+          <div class="r"><span class="k">confidence</span><span><span class="meter"><i></i></span>0.93 → <span class="hold">HOLD</span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="copy">
+        <div class="num" data-r>02</div>
+        <h3 data-r>Route on the prediction.</h3>
+        <p class="p" data-r>A fixed rule acts on that prediction: irreversible or high-impact waits for a human, catastrophic is stopped, and the routine <b>95%</b> flows untouched.</p>
+        <div class="fine" data-r>The prediction is advisory — it decides what a human reviews. Hard blocking stays deterministic, and never fails open.</div>
+      </div>
+      <div class="rts" data-r>
+        <div class="rt a"><span class="dot"></span><span class="v">ALLOW</span><span class="d">post_internal_note — flows, no friction</span></div>
+        <div class="rt h"><span class="dot"></span><span class="v">HOLD</span><span class="d">delete_customer — irreversible, waits for a human</span></div>
+        <div class="rt b"><span class="dot"></span><span class="v">BLOCK</span><span class="d">export_db — unknown host, connection never opens</span></div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="copy">
+        <div class="num" data-r>03</div>
+        <h3 data-r>It teaches itself. It compounds.</h3>
+        <p class="p" data-r>It learns from consequences it generates for itself: rehearse an action in a sandbox, diff the world before and after — <b>that diff is a free, ground-truth label</b>. Sharper with every action; a rulebook isn't.</p>
+        <div class="fine" data-r>Trust envelope: code, files, databases and git sandbox faithfully — trusted prediction. Money and external sends can't — those default to a human.</div>
+      </div>
+      <div class="viz loop" data-r>
+        <div class="li"><span class="n">01</span><span class="lt"><b>Sandbox rehearsal</b> — run the proposed action in a secure, isolated copy of the system.</span></div>
+        <div class="li"><span class="n">02</span><span class="lt"><b>State diffing</b> — compare before and after; the diff is the ground-truth consequence.</span></div>
+        <div class="li"><span class="n">03</span><span class="lt"><b>Model update</b> — the world model's dynamics core learns, with zero human labels.</span></div>
+      </div>
+    </div>
+
+    <div class="kick" data-r>The moat is the data: a <span class="a">consequence-label stream from sandbox simulations</span> that compounds with every action Rabit sees.</div>
+  </div>
+</section>
+
+<!-- VISION -->
+<section id="approach">
+  <div class="wrap">
+    <div class="eyebrow" data-r>Our vision</div>
+    <h2 data-r>AI is moving from words, to actions, to <span class="a">the physical world</span>.</h2>
+    <p class="sub" data-r>Every step in that arc needs a layer that understands consequences — one that knows what an action will do before it happens. We're building that layer: the control plane between an agent's intent and its effect on the world.</p>
+    <div class="vcols" data-r>
+      <div class="vcol">
+        <div class="vlab">Software · today</div>
+        <p>Financial services, insurance, customer support, code &amp; DevOps — agents already writing to production.</p>
+      </div>
+      <div class="vcol next">
+        <div class="vlab">Physical · next</div>
+        <p>Mobility, robotics, industrial systems, medical devices — where a wrong action can't be undone at all.</p>
+      </div>
+    </div>
+    <div class="kick" data-r>The same primitive — <span class="a">predict the consequence, before the action</span> — governs a database write today and a robot's motion tomorrow.</div>
+  </div>
+</section>
+
+<!-- FOUNDER + DESIGN PARTNERS -->
+<section id="partners">
+  <div class="wrap">
+    <div class="eyebrow" data-r>Who's building this</div>
+    <h2 data-r>Early, opinionated, and <span class="a">built in the open</span>.</h2>
+    <div class="founder solo" data-r>
+      <div class="who">
+        <div class="avatar">AS</div>
+        <div>
+          <div class="nm">Adam Shibli</div>
+          <div class="rl">Founder</div>
+        </div>
+      </div>
+      <p class="fbio">I'm building Rabit — the consequence layer for AI agents. It's in active build, and I'd rather build it with a few real teams than in a vacuum.</p>
+      <div class="socials">
+        <a class="slink" href="https://www.linkedin.com/in/adam-shibli/" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="contact">
+  <div class="wrap">
+    <div class="final" data-r>
+      <div class="eyebrow">Get in touch</div>
+      <h2>Give your agents <span class="a">foresight</span>.</h2>
+      <p class="sub">Rabit is in active build, and we're working with a small group of design partners running agents in production. Tell me what your agents touch — I'll show you where we are and get you access as it's ready.</p>
+      <form class="intake" id="intake-form" action="https://formspree.io/f/mvzwznak" method="POST">
+        <input type="hidden" name="_subject" value="Rabit — early access request">
+        <div class="row2">
+          <div class="fld"><label for="if-name">Name</label><input id="if-name" name="name" type="text" required placeholder="Jane Doe"></div>
+          <div class="fld"><label for="if-email">Work email</label><input id="if-email" name="email" type="email" required placeholder="jane@company.com"></div>
+        </div>
+        <div class="fld"><label for="if-co">Company</label><input id="if-co" name="company" type="text" placeholder="Acme Platform"></div>
+        <div class="fld"><label for="if-msg">What are your agents doing in production today?</label><textarea id="if-msg" name="message" rows="3" placeholder="A sentence or two is plenty."></textarea></div>
+        <button type="submit" class="btn btn-solid intake-submit">Request access</button>
+        <div class="intake-note" id="intake-note" hidden>Thanks — I'll be in touch shortly.</div>
+      </form>
+      <div class="intake-alt">Prefer email? <a href="mailto:adam.shibli2001@gmail.com?subject=Rabit%20%E2%80%94%20early%20access">adam.shibli2001@gmail.com</a></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fl">© 2026 Rabit · <a href="mailto:adam.shibli2001@gmail.com">Adam Shibli</a></div>
+  <div class="tg">We predict what an action will do — <b>before it runs.</b></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* hero point-cloud — luminous grayscale sphere (canvas 2D, additive) */
+  var cv=document.getElementById('orb'), heroVisible=true;
+  if(cv){
+    var ctx=cv.getContext('2d'), DPR=Math.min(devicePixelRatio||1,2), W,H;
+    function size(){W=cv.width=Math.round(innerWidth*DPR);H=cv.height=Math.round(innerHeight*DPR);cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';}
+    size(); addEventListener('resize',size,{passive:true});
+
+    var N=innerWidth<820?1300:2400, pts=new Float32Array(N*3), ph=new Float32Array(N), gr=Math.PI*(3-Math.sqrt(5));
+    for(var i=0;i<N;i++){
+      var y=1-(i/(N-1))*2, rr=Math.sqrt(Math.max(0,1-y*y)), th=gr*i;
+      pts[i*3]=Math.cos(th)*rr; pts[i*3+1]=y; pts[i*3+2]=Math.sin(th)*rr;
+      ph[i]=Math.random()*6.283;
+    }
+
+    var tx=0,ty=0,mx=0,my=0;
+    addEventListener('pointermove',function(e){tx=e.clientX/innerWidth-0.5; ty=e.clientY/innerHeight-0.5;},{passive:true});
+
+    var t=0;
+    function draw(){
+      t+=0.0015; mx+=(tx-mx)*0.035; my+=(ty-my)*0.035;
+      ctx.clearRect(0,0,W,H);
+      ctx.globalCompositeOperation='lighter';
+      var cx=W/2, cy=H*0.43, baseR=Math.min(W,H)*0.27;
+      var ry=t+mx*0.5, rx=Math.sin(t*0.45)*0.16+my*0.42;
+      var cY=Math.cos(ry),sY=Math.sin(ry),cX=Math.cos(rx),sX=Math.sin(rx);
+      var breathe=1+0.016*Math.sin(t*0.85);
+      for(var i=0;i<N;i++){
+        var x=pts[i*3],y=pts[i*3+1],z=pts[i*3+2];
+        var m=(1+0.028*Math.sin(t*1.05+x*2.6+y*1.7))*breathe;
+        x*=m; y*=m; z*=m;
+        var x1=x*cY-z*sY, z1=x*sY+z*cY;
+        var y1=y*cX-z1*sX, z2=y*sX+z1*cX;
+        var persp=2.0/(2.0+z2);
+        var sx=cx+x1*baseR*persp, sy=cy+y1*baseR*persp;
+        var depth=(z2+1)*0.5;
+        var tw=0.90+0.14*Math.sin(t*2.0+ph[i]);
+        var rad=(0.5+depth*1.8)*DPR;
+        var al=(0.06+depth*0.6)*tw;
+        var g=(152+depth*103)|0;
+        ctx.fillStyle='rgba('+g+','+g+','+(g+6)+','+al+')';
+        ctx.beginPath(); ctx.arc(sx,sy,rad,0,6.283); ctx.fill();
+      }
+      ctx.globalCompositeOperation='source-over';
+    }
+    function loop(){ if(heroVisible) draw(); requestAnimationFrame(loop); }
+    draw();
+    if(!reduced) requestAnimationFrame(loop);
+  }
+
+  if(window.gsap && window.ScrollTrigger){
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.to('#progress',{width:'100%',ease:'none',scrollTrigger:{trigger:document.body,start:'top top',end:'bottom bottom',scrub:.3}});
+    ScrollTrigger.create({start:40,onUpdate:function(s){document.getElementById('nav').classList.toggle('scrolled',s.scroll()>40);}});
+
+    // hero content in
+    if(!reduced){
+      gsap.from('#hero [data-r]',{opacity:0,y:26,duration:.95,stagger:.09,ease:'power3.out',delay:.15});
+    }
+    // fade hero content, point-cloud + glow out as we leave the hero, and pause the RAF work
+    gsap.to('#hero .hero-inner',{opacity:.06,y:-32,ease:'none',scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom 45%',scrub:true}});
+    gsap.to(['#orb','#coreglow'],{opacity:0,ease:'none',scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom 42%',scrub:true}});
+    gsap.to('.scrollhint',{opacity:0,ease:'none',scrollTrigger:{trigger:'#hero',start:'top top',end:'14% top',scrub:true}});
+    ScrollTrigger.create({trigger:'#hero',start:'bottom 42%',onEnter:function(){heroVisible=false;},onLeaveBack:function(){heroVisible=true;}});
+
+    // reveals
+    if(!reduced){
+      gsap.utils.toArray('section:not(#hero) [data-r]').forEach(function(el){
+        gsap.from(el,{opacity:0,y:26,duration:.8,ease:'power3.out',
+          scrollTrigger:{trigger:el,start:'top 86%',toggleActions:'play none none none'}});
+      });
+    }
+
+    // counter
+    gsap.utils.toArray('[data-count]').forEach(function(el){
+      var end=parseFloat(el.getAttribute('data-count')),suf=el.getAttribute('data-suffix')||'';
+      if(reduced){ el.textContent=end+suf; return; }
+      var o={v:0};
+      ScrollTrigger.create({trigger:el,start:'top 86%',once:true,onEnter:function(){
+        gsap.to(o,{v:end,duration:1.6,ease:'power2.out',onUpdate:function(){el.textContent=Math.round(o.v)+suf;}});
+      }});
+    });
+  }
+})();
+</script>
+<script>
+(function(){
+  var f=document.getElementById('intake-form'); if(!f) return;
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var btn=f.querySelector('.intake-submit'), note=document.getElementById('intake-note');
+    btn.textContent='Sending…'; btn.disabled=true;
+    fetch(f.action,{method:'POST',body:new FormData(f),headers:{'Accept':'application/json'}})
+      .then(function(r){
+        if(r.ok){ f.reset(); btn.style.display='none'; note.hidden=false; }
+        else { throw new Error(); }
+      })
+      .catch(function(){ btn.textContent='Request access'; btn.disabled=false; note.hidden=false; note.style.color='var(--block)'; note.textContent='Something went wrong — email adam.shibli2001@gmail.com'; });
+  });
+})();
+</script>
+</body>
+</html>
