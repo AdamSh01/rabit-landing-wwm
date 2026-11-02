@@ -1,549 +1,755 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rabit — See the consequence before the action</title>
-<meta name="description" content="Rabit predicts what an AI agent's action will do — reversible or not, how far it reaches — before it runs. The dangerous ones wait for a human. Everything else flows.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rabit · See the consequence before the action</title>
+<meta name="description" content="Rabit checks each action your AI agents take before it runs, forecasts what will happen in your systems, and flags the risky ones for a person.">
 <link rel="canonical" href="https://rabit.is/">
-<!-- Open Graph / social share card -->
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Rabit">
-<meta property="og:url" content="https://rabit.is/">
-<meta property="og:title" content="Rabit — See the consequence before the action">
-<meta property="og:description" content="We predict what an agent's action will do — before it runs. The dangerous ones wait for a human. Everything else flows.">
-<meta property="og:image" content="https://rabit.is/rabit_og.png">
-<meta property="og:image:type" content="image/png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Rabit — the consequence layer for AI agents. See the consequence before the action.">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Rabit — See the consequence before the action">
-<meta name="twitter:description" content="We predict what an agent's action will do — before it runs.">
-<meta name="twitter:image" content="https://rabit.is/rabit_og.png">
-<link rel="icon" type="image/png" href="favicon.png">
-<link rel="apple-touch-icon" href="favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rabit.is/">
+<meta property="og:title" content="Rabit · See the consequence before the action">
+<meta property="og:description" content="Rabit checks each action your AI agents take before it runs, forecasts what will happen in your systems, and flags the risky ones for a person.">
+<meta property="og:image" content="https://rabit.is/rabit_og.png"><meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#EEEEE6">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 700 713'%3E%3Cpath fill='%231D1D15' d='M130.3%20697.7C98.3%20668.4%2081.9%20641.7%2075.4%20608.3C73.2%20597.2%2072.9%20570.4%2074.9%20556.8L76.3%20547.0L114.1%20546.8L152.0%20546.5L152.3%20514.8L152.6%20483.0L132.0%20482.8C120.7%20482.7%20110.0%20482.6%20108.2%20482.6C104.2%20482.7%20104.2%20482.3%20108.2%20475.8C143.1%20418.9%20198.3%20374.0%20263.5%20349.5C295.4%20337.5%20332.9%20329.7%20366.3%20328.1L380.2%20327.5L386.5%20310.0C397.3%20280.0%20409.4%20253.8%20419.8%20238.2C424.6%20231.0%20424.6%20231.0%20422.4%20231.0C419.2%20231.0%20384.4%20222.9%20372.6%20219.4C290.9%20195.3%20233.7%20149.9%20199.5%2082.0C195.0%2073.1%20186.0%2051.1%20186.0%2049.2C186.0%2047.7%20193.4%2047.7%20210.6%2049.0C302.1%2056.2%20376.7%2098.8%20442.7%20181.5C448.6%20188.9%20453.5%20194.8%20453.7%20194.6C454.4%20193.9%20447.9%20178.6%20441.4%20165.3C414.2%20109.9%20365.6%2066.0%20310.8%2047.5L299.2%2043.6L297.1%2034.0C294.6%2023.0%20293.0%2013.1%20293.0%207.7L293.0%204.0L297.2%204.6C341.5%2011.0%20383.0%2027.4%20418.0%2052.3C454.2%2078.1%20489.6%20120.1%20510.1%20161.5L516.0%20173.6L524.8%20174.9C561.9%20180.2%20606.6%20199.2%20637.5%20222.9C652.3%20234.2%20678.5%20260.7%20691.6%20277.6C696.8%20284.3%20697.2%20287.7%20694.0%20300.5C684.1%20339.7%20648.3%20367.2%20590.5%20379.9C582.8%20381.6%20570.3%20383.9%20562.6%20385.0C555.0%20386.0%20548.6%20387.1%20548.3%20387.3C547.5%20388.2%20570.8%20394.0%20579.4%20395.0C584.3%20395.6%20595.1%20396.0%20603.4%20395.9L618.5%20395.8L620.8%20407.1C624.4%20424.6%20624.9%20450.9%20622.1%20470.1C615.7%20514.6%20597.3%20548.6%20559.6%20585.9L550.1%20595.3L556.8%20603.9C571.5%20622.9%20622.2%20686.2%20631.4%20697.0L641.1%20708.5L573.9%20708.8L506.7%20709.0L496.1%20698.2C484.5%20686.4%20469.5%20674.7%20456.0%20666.9L447.3%20661.9L449.2%20655.2C454.6%20636.0%20457.1%20607.7%20455.1%20588.0C448.1%20519.8%20405.7%20470.6%20341.7%20456.8C327.5%20453.7%20292.7%20453.5%20277.2%20456.4C271.6%20457.5%20267.2%20458.5%20267.4%20458.7C267.6%20459.0%20272.7%20459.8%20278.7%20460.5C338.2%20467.9%20379.4%20494.6%20402.4%20540.8C416.8%20569.6%20420.1%20603.8%20411.8%20639.4L409.8%20648.2L406.6%20647.6C385.1%20643.1%20356.9%20642.2%20337.6%20645.4C323.9%20647.6%20308.5%20651.9%20295.0%20657.3L284.5%20661.5L305.5%20662.1C340.2%20663.0%20363.8%20668.7%20386.5%20681.7C398.9%20688.7%20415.0%20701.3%20418.5%20706.6L420.0%20709.0L281.3%20709.0L142.5%20708.9L130.3%20697.7ZM22.8%20545.2L4.0%20545.0L4.0%20514.5L4.0%20484.0L36.0%20484.0L68.0%20484.0L67.8%20514.5L67.5%20545.0L54.5%20545.2C47.3%20545.4%2033.1%20545.4%2022.8%20545.2ZM600.0%20260.5L600.0%20234.0L572.5%20234.0L545.0%20234.0L545.0%20260.5L545.0%20287.0L572.5%20287.0L600.0%20287.0L600.0%20260.5Z'/%3E%3C/svg%3E">
+<script>(function(d){d.className+=" js";try{if(matchMedia("(prefers-reduced-motion: reduce)").matches)d.className+=" still"}catch(e){}})(document.documentElement)</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Host+Grotesk:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
 <style>
-:root{
-  --bg:#0A0B0D; --bg2:#0E1116; --panel:#14171E; --panel2:#191D26;
-  --text:#EDEFF3; --lead:#B7BDC8; --muted:#7E8592; --faint:#565C68;
-  --teal:#43E0C4; --teal-soft:rgba(67,224,196,.12);
-  --allow:#5FCB98; --hold:#E6A338; --block:#E5615A;
-  --line:rgba(255,255,255,.08); --line-soft:rgba(255,255,255,.045);
-  --display:'Space Grotesk',sans-serif; --body:'IBM Plex Sans',sans-serif; --mono:'IBM Plex Mono',monospace;
+:root{--paper:#EEEEE6;--sand:#E2DDCF;--ink:#1D1D15;--muted:#5C5C50;--rust:#A8331B;--rule:rgba(29,29,21,.16);--rule-2:rgba(29,29,21,.22);--rule-3:rgba(29,29,21,.42);--display:"Host Grotesk","Helvetica Neue",Arial,sans-serif;--serif:"Source Serif 4",Georgia,serif;--mono:"Geist Mono",ui-monospace,Menlo,monospace;--nav:64px;--chr:44px}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav) + 12px)}
+html{overflow-x:clip}body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);-webkit-font-smoothing:antialiased}
+a{color:var(--ink);text-underline-offset:3px;text-decoration-thickness:1px}a:hover{color:var(--muted)}
+::selection{background:var(--ink);color:var(--paper)}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+h1,h2,h3,p,ol,ul,figure{margin:0}ol,ul{padding:0;list-style:none}button{font:inherit;color:inherit}
+.sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:absolute;left:-999px;top:8px;z-index:60;background:var(--ink);color:var(--paper);padding:10px 14px;font-family:var(--display)}.skip:focus{left:16px}
+:root{--pad:clamp(14px,3.5vw,48px)}
+.pg{max-width:1280px;margin:0 auto;padding:0 var(--pad);position:relative}
+.rough{filter:url(#rough)}
+.mono{font-family:var(--mono)}
+.h2{font-family:var(--display);font-weight:400;font-size:clamp(34px,5vw,72px);line-height:1;letter-spacing:-.04em;text-wrap:balance}
+.lead{font-size:clamp(17px,1.4vw,20px);line-height:1.6;text-wrap:pretty}
+.kicker{font-family:var(--mono);font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:10px}
+.kicker i{width:7px;height:7px;background:var(--ink);display:block;flex:none}
+.kicker i + i{margin-top:5px}
+.tag{align-self:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink);padding:3px 8px;border-radius:2px;display:inline-block}
+.stop{display:inline-block;width:.14em;height:.14em;margin-left:.05em;background:var(--rust);vertical-align:baseline}
+.btn{display:inline-flex;align-items:center;gap:12px;height:54px;padding:0 28px;border-radius:999px;background:var(--ink);color:var(--paper);font-family:var(--display);font-size:17px;text-decoration:none;white-space:nowrap;transition:background-color .2s}
+.btn:hover{color:var(--paper);background:#3a3a30}.btn::after{content:"";width:.28em;height:.28em;background:var(--rust);margin-left:-8px;opacity:0;transform:scale(.3);transition:opacity .25s,transform .35s cubic-bezier(.2,.9,.3,1)}.btn:hover::after{opacity:1;transform:none}.btn .ar{display:inline-block;transition:transform .35s cubic-bezier(.2,.9,.3,1)}.btn:hover .ar{transform:translateX(4px)}
+.btn-sm{height:38px;padding:0 18px;font-size:14px}
+.topbar{background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:12.5px;letter-spacing:.04em}
+.topbar .in{max-width:1280px;margin:0 auto;padding:8px clamp(14px,3.5vw,48px);display:flex;gap:14px;align-items:center;flex-wrap:wrap}.topbar a{color:var(--paper);white-space:nowrap}.topbar span{white-space:nowrap}
+.nav{position:sticky;top:0;z-index:30;background:var(--paper);border-bottom:1px solid var(--rule)}
+.nav .in{max-width:1280px;margin:0 auto;padding:0 clamp(14px,3.5vw,48px);height:var(--nav);display:flex;align-items:center;gap:28px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink)}.brand svg{width:32px;height:33px;display:block;overflow:visible}.brand span{font-family:var(--mono);font-weight:500;font-size:14px;letter-spacing:.18em}
+.navlinks{display:flex;gap:26px;font-family:var(--display);font-size:16px;white-space:nowrap}.navlinks a{text-decoration:none}
+.nav .btn{margin-left:auto}
+.lid{fill:var(--ink);transform-box:fill-box;transform-origin:50% 0;transform:scaleY(0);transition:transform .4s}.lid.sleep{transform:scaleY(1)}
+.rw{display:inline-block;overflow:hidden;vertical-align:bottom;padding-bottom:.14em;margin-bottom:-.14em}.rw > span{display:inline-block}
+.kicker.arm i{opacity:0}.kicker.in i{animation:step .34s cubic-bezier(.2,.9,.3,1) both}.kicker.in i + i{animation-delay:.17s}
+@keyframes step{from{opacity:0;transform:translateY(-8px) scale(.3)}to{opacity:1;transform:none}}
+.fp{position:absolute;left:0;top:0;display:flex;gap:4px;pointer-events:none;z-index:4}.fp i{width:6px;height:6px;background:var(--ink);display:block;animation:fp .3s cubic-bezier(.2,.9,.3,1) both}
+@keyframes fp{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
+/* hero: a flipbook of eight ink cards */
+.hero{position:relative;padding:0}
+.hground{position:absolute;left:calc(-1 * var(--pad));right:calc(-1 * var(--pad));bottom:-4px;width:calc(100% + 2 * var(--pad));height:8px;overflow:visible;display:block}
+.stackwrap{min-width:0}
+.hero-grid{position:sticky;top:var(--nav);min-height:calc(100vh - var(--nav));display:grid;grid-template-columns:minmax(0,10fr) minmax(0,11fr);gap:clamp(28px,4vw,64px);align-items:center;padding:clamp(20px,3vw,40px) 0}
+.hero .copy{display:flex;flex-direction:column;align-items:flex-start;gap:26px;min-width:0}
+.eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:12px}.eyebrow i{width:9px;height:9px;background:var(--ink);display:block}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(44px,5.6vw,86px);line-height:.95;letter-spacing:-.045em;max-width:11ch;text-wrap:balance}
+.hero .sub{font-size:clamp(17px,1.4vw,20px);line-height:1.55;max-width:44ch;text-wrap:pretty}
+.hero .cta{display:flex;flex-direction:column;gap:14px;align-items:flex-start}.cta small{font-family:var(--mono);font-size:13px;line-height:1.5;color:var(--muted)}
+.stack{position:relative;padding:14px 14px 0 0;min-width:0}
+.cardback{position:absolute;inset:0;background:#F7F6F0;border:2px solid var(--ink);border-radius:10px;pointer-events:none;z-index:0}.fcard{position:relative;z-index:1}
+.cardback.u1{transform:translate(6px,-6px)}.cardback.u2{transform:translate(12px,-12px);opacity:.7}
+.cardw{position:relative;border-radius:10px;cursor:pointer;outline-offset:4px}
+.fcard{display:block;width:100%;height:auto;font-family:var(--mono);font-size:18px}
+.fcard g[data-f]{display:none}.fcard g[data-f="9"]{display:inline}
+.ear{position:absolute;right:-2px;bottom:-2px;width:38px;height:38px;border:0;padding:0;background:transparent;cursor:pointer;clip-path:polygon(100% 0,100% 100%,0 100%);z-index:4}
+.cardlink{display:none;position:absolute;inset:0;z-index:3;font-size:0;color:transparent;border-radius:10px}.cardw[data-last="1"] .cardlink{display:block}.cardw[data-last="1"]{cursor:pointer}
+.acur{animation:cur 1s steps(2,end) infinite}
+.cardw,.cardback{transition:transform .35s cubic-bezier(.2,.9,.3,1)}.stack:hover .cardw{transform:translate(-2px,2px)}
+.ear::before{content:"";position:absolute;inset:0;background:var(--sand);border-left:2px solid var(--ink);border-top:2px solid var(--ink);clip-path:polygon(0 100%,100% 0,0 0);transform-origin:0 100%;transition:transform .25s}
+.ear:hover::before,.ear:focus-visible::before{transform:scale(1.18)}
+.flipnav{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.06em;margin-top:12px;display:flex;justify-content:flex-end;transition:opacity .4s;white-space:nowrap}
+/* tunnels + chambers */
+.tun{display:block;width:100%;height:clamp(64px,9vw,112px);overflow:visible}
+.tun path{vector-effect:non-scaling-stroke;stroke-linecap:round;fill:none}
+.ch{position:relative;background:var(--sand);border-radius:var(--chr);padding:clamp(36px,5.5vw,80px) clamp(18px,4.5vw,68px) clamp(40px,6vw,88px);display:flex;flex-direction:column;gap:clamp(36px,4.5vw,60px)}
+.ch .outline{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.ch .outline rect{rx:var(--chr);fill:none;stroke:var(--ink);stroke-width:2.2}
+.ch.night{background:var(--ink);color:var(--paper)}.ch.night .outline rect{stroke:var(--paper)}
+.head{display:flex;flex-direction:column;gap:18px}
+.runner{position:absolute;left:0;top:0;width:38px;height:39px;pointer-events:none;color:var(--ink);opacity:0;visibility:hidden;transition:opacity .3s;z-index:5;overflow:visible}
+/* problem */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:14px}
+.card{background:var(--paper);border-radius:22px;padding:26px 24px 22px;display:flex;flex-direction:column;gap:14px}
+.card .n{font-family:var(--mono);font-size:clamp(40px,4vw,56px);letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap}
+.card p{font-size:16.5px;line-height:1.5;flex:1;text-wrap:pretty}.card a{font-family:var(--mono);font-size:12px;line-height:1.5;color:var(--muted);overflow-wrap:anywhere}
+.today{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(20px,4vw,60px);align-items:start}
+.today h3{font-family:var(--display);font-weight:400;font-size:clamp(25px,2.5vw,34px);letter-spacing:-.025em;line-height:1.1}
+.srow{display:grid;grid-template-columns:28px minmax(0,1fr);gap:16px;align-items:start;padding:16px 0;border-top:1px solid var(--rule-3)}.srow:last-child{border-bottom:1px solid var(--rule-3)}
+.srow svg{overflow:visible;margin-top:1px}.srow p{font-size:17.5px;line-height:1.55;text-wrap:pretty}
+.words{font-family:var(--display);font-weight:500;font-size:clamp(26px,3.4vw,48px);line-height:1.12;letter-spacing:-.03em;max-width:22ch;text-wrap:balance}
+.words [data-w]{transition:opacity .35s}
+.mk{position:relative;white-space:nowrap;transition:color .5s}
+.mk svg{position:absolute;left:-3%;width:106%;height:.42em;overflow:visible;pointer-events:none;clip-path:inset(0 0 0 0);transition:clip-path .7s cubic-bezier(.5,0,.2,1)}
+.mk path{fill:none;stroke-width:3.4;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.mk.strike svg{top:.36em}.mk.strike path{stroke:var(--ink)}.mk.under svg{top:1.02em}.mk.under path{stroke:var(--rust);stroke-width:4.2}
+.words.arm .mk svg{clip-path:inset(0 100% 0 0)}.words.arm.done .mk svg{clip-path:inset(0 0 0 0)}.words.arm.done .mk.under svg{transition-delay:.5s}.words.done .mk.strike{color:var(--muted)}
+/* how */
+.how-desk{position:relative;height:280vh}
+.how-stick{position:sticky;top:var(--nav);height:calc(100vh - var(--nav));padding:28px 0;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,4vw,72px);align-items:center}
+.steps{display:flex;flex-direction:column;gap:30px}
+.step{display:grid;grid-template-columns:42px minmax(0,1fr);gap:6px;transition:opacity .5s}
+.step .n{font-family:var(--mono);font-size:13px;letter-spacing:.08em;padding-top:7px}
+.step h3{font-family:var(--display);font-weight:400;font-size:clamp(21px,1.9vw,27px);line-height:1.15;letter-spacing:-.02em;text-wrap:balance;margin-bottom:9px}.step p{font-size:16.5px;line-height:1.55;text-wrap:pretty}
+.how-fig{background:var(--paper);border-radius:26px;padding:clamp(16px,2vw,26px);display:flex;flex-direction:column;gap:10px}
+.how-svg{width:100%;height:auto;display:block;overflow:visible;font-family:var(--mono);font-size:14px;max-height:calc(100vh - 230px)}
+.how-after{font-family:var(--display);font-size:clamp(21px,2.1vw,29px);line-height:1.3;letter-spacing:-.015em;max-width:40ch;text-wrap:pretty}
+.how-desk.static{height:auto}.how-desk.static .how-stick{position:relative;top:0;height:auto;align-items:start}
+/* see */
+.see-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(32px,5vw,88px);align-items:start}
+.see-left{display:flex;flex-direction:column;gap:16px;max-width:520px}
+.rl-k{font-family:var(--mono);color:var(--muted);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.ex-tabs{display:flex;flex-wrap:wrap;gap:8px}
+.ex-tabs button{cursor:pointer;font-family:var(--mono);font-size:12.5px;line-height:1.35;text-align:left;padding:9px 14px;border-radius:20px;border:1px solid var(--ink);background:transparent;color:var(--ink);transition:background-color .25s,color .25s;height:auto;min-height:0;white-space:normal;overflow-wrap:anywhere;max-width:100%}
+.ex-tabs button[aria-selected="true"]{background:var(--ink);color:var(--paper)}
+.receipt{position:relative;margin-top:6px}
+.rbody{background:var(--paper);border-radius:22px 22px 0 0;padding:26px 26px 20px;font-family:var(--mono);font-size:14px;line-height:1.5;display:flex;flex-direction:column;gap:6px}
+.rtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.rtop i{width:10px;height:10px;background:var(--ink);display:block}
+.rl-k.gap{margin-top:14px}.rl-v.big{font-size:17px}
+.dash{border-top:1px dashed var(--rule-3);margin:14px 0 10px}
+.chip{align-self:flex-start;font-weight:600;letter-spacing:.14em;padding:5px 14px;border-radius:2px;transform:rotate(-2deg)}
+.chip.block{background:var(--rust);color:var(--paper)}.chip.review{border:1.5px solid var(--ink);color:var(--ink);padding:4px 13px}
+.zig{display:block;width:100%;height:14px}
+.see-right{display:flex;flex-direction:column;gap:36px;padding-top:clamp(0px,3vw,48px)}
+.see-right h3{font-family:var(--display);font-weight:400;font-size:clamp(23px,2.2vw,31px);line-height:1.15;letter-spacing:-.02em;margin-bottom:12px}.see-right p{font-size:17.5px;line-height:1.6;max-width:52ch;text-wrap:pretty}
+/* pinned ticket */
+.ticket{position:fixed;right:22px;bottom:22px;z-index:25;width:236px;background:var(--paper);border-radius:16px;padding:16px 18px 14px;font-family:var(--mono);font-size:12px;line-height:1.45;display:flex;flex-direction:column;gap:3px;box-shadow:0 0 0 1.5px var(--ink);opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .35s,transform .35s}
+.ticket[data-stage="1"],.ticket[data-stage="2"],.ticket[data-stage="3"]{opacity:1;transform:none}
+.ticket .k{color:var(--muted);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;margin-top:8px}
+.ticket .wait{opacity:0;transition:opacity .4s}
+.ticket[data-stage="2"] .s2,.ticket[data-stage="3"] .s2{opacity:1}.ticket[data-stage="3"] .s3{opacity:1}
+.ticket .dots::after{content:"forecasting";animation:dots 1.2s steps(4,end) infinite}
+.ticket[data-stage="3"] .dots{display:none}.ticket .s3{display:none}.ticket[data-stage="3"] .s3{display:block}
+@keyframes dots{0%{content:"forecasting"}25%{content:"forecasting."}50%{content:"forecasting.."}75%{content:"forecasting..."}}
+/* who */
+.who-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px}
+.who{background:var(--paper);border-radius:22px;padding:26px;display:flex;flex-direction:column;gap:20px}
+.who svg{width:100%;max-width:240px;height:auto;display:block;overflow:visible}
+.who p{font-size:16.5px;line-height:1.55;text-wrap:pretty}.who p b{font-family:var(--display);font-weight:400;font-size:21px;line-height:1.25;letter-spacing:-.015em;display:block;margin-bottom:10px}
+.cover{font-size:17.5px;line-height:1.6;max-width:62ch;text-wrap:pretty}
+/* pilot */
+.track{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px}
+.track .rail{position:absolute;left:7px;right:0;top:6px;height:2px;background:var(--ink)}
+.pstep{position:relative;padding:38px 0 0;display:flex;flex-direction:column;gap:10px}
+.pstep .pm{position:absolute;left:0;top:0;width:14px;height:14px;border:2px solid var(--ink);background:var(--sand);transition:background-color .3s}.pstep.on .pm{background:var(--ink)}
+.pstep .n{font-family:var(--mono);font-size:13px;letter-spacing:.08em}
+.pstep h3{font-family:var(--display);font-weight:400;font-size:23px;line-height:1.15;letter-spacing:-.02em}.pstep p{font-size:16.5px;line-height:1.55;text-wrap:pretty}
+.price{background:var(--paper);border-radius:22px;padding:clamp(22px,3vw,34px);display:flex;flex-wrap:wrap;gap:22px 44px;align-items:center;justify-content:space-between}
+.price p{font-size:clamp(17px,1.5vw,21px);line-height:1.5;text-wrap:pretty;max-width:60ch}
+/* ledger */
+.ledger{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(28px,4.5vw,64px)}
+.ledger h3{font-family:var(--mono);font-weight:500;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.lrow{display:grid;grid-template-columns:12px minmax(0,1fr);gap:16px;padding:15px 0;border-top:1px solid var(--rule-3)}.lrow:last-child{border-bottom:1px solid var(--rule-3)}
+.lrow i{width:10px;height:10px;background:var(--ink);margin-top:8px;display:block}.not .lrow i{background:transparent;border:1.5px solid var(--ink)}
+.lrow p{font-size:17.5px;line-height:1.55}
+.founder{display:flex;flex-direction:column;gap:12px}.founder p{font-size:clamp(17px,1.5vw,21px);line-height:1.5;max-width:56ch;text-wrap:pretty}.founder span{font-family:var(--mono);font-size:13px;color:var(--muted)}.founder span a{color:var(--muted)}
+/* faq */
+.faq{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:0 clamp(28px,4.5vw,64px);align-items:start}
+.faq-col{display:flex;flex-direction:column;border-bottom:1px solid var(--rule-3)}
+.qa{border-top:1px solid var(--rule-3)}
+.qa button{all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:grid;grid-template-columns:minmax(0,1fr) 16px;gap:20px;align-items:start;padding:20px 0}
+.qa button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.qa .q{font-family:var(--display);font-size:clamp(18px,1.5vw,21px);line-height:1.3;letter-spacing:-.01em}
+.pm-ico{position:relative;width:14px;height:14px;margin-top:6px;display:block}
+.pm-ico i{position:absolute;left:0;top:5.5px;width:14px;height:3px;background:var(--ink);transition:transform .5s cubic-bezier(.22,.61,.36,1)}
+.qa .pm-ico i:last-child{transform:rotate(90deg)}.qa.open .pm-ico i:last-child{transform:rotate(0)}
+
+.qa .a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s cubic-bezier(.22,.61,.36,1)}.qa.open .a{grid-template-rows:1fr}
+.qa .a > div{overflow:hidden}.qa .a p{padding:0 36px 22px 0;font-size:16.5px;line-height:1.6;text-wrap:pretty}
+/* nest */
+.night .h2,.night .lead{color:var(--paper)}
+.night .btn{background:var(--paper);color:var(--ink)}.night .btn:hover{background:#fff}
+.night :focus-visible{outline-color:var(--paper)}
+.night .write{font-family:var(--mono);font-size:13px;color:#B4B4A6}.night .write a{color:var(--paper)}
+.nest-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(200px,30%);gap:clamp(24px,4vw,64px);align-items:end}
+.nest-grid > div{display:flex;flex-direction:column;gap:30px;align-items:flex-start}
+.close-h{font-family:var(--display);font-weight:400;font-size:clamp(42px,6.6vw,104px);line-height:.95;letter-spacing:-.045em;max-width:13ch;text-wrap:balance;color:var(--paper)}
+.sleeper{width:100%;height:auto;display:block;overflow:visible;color:var(--paper)}
+/* footer */
+.foot{padding:clamp(40px,5vw,72px) 0 28px;display:flex;flex-direction:column;gap:clamp(36px,5vw,64px)}
+.foot-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:40px;align-items:flex-start}
+.foot-brand{display:flex;flex-direction:column;gap:16px;text-decoration:none;color:var(--ink)}.foot-brand svg{width:84px;height:86px;display:block;overflow:visible}.foot-brand span{font-family:var(--mono);font-weight:500;font-size:14px;letter-spacing:.18em}
+.foot-nav{display:flex;flex-direction:column;gap:6px;font-family:var(--display);font-size:clamp(28px,3.6vw,46px);line-height:1.1;letter-spacing:-.03em}.foot-nav a{text-decoration:none}
+.foot-base{display:flex;flex-wrap:wrap;gap:8px 12px;font-family:var(--mono);font-size:12.5px;color:var(--muted);padding-top:18px;border-top:1px solid var(--rule-2)}.foot-base a{color:var(--muted)}
+@media (max-width:1839px){.ticket{display:none}}
+@media (max-width:900px){
+  .hero{height:auto;padding:0 0 clamp(28px,5vw,56px)}
+  .hero-grid{position:relative;top:0;min-height:0;display:flex;flex-direction:column;gap:18px;padding:clamp(16px,3vw,32px) 0 0}
+  .hero .copy{display:contents}
+  .hero .eyebrow{order:1}.hero h1{order:2;max-width:14ch;font-size:clamp(32px,7vw,56px)}
+  .hero .stackwrap{order:3;margin:6px 0 0;align-self:stretch}
+  .hero .stack{width:min(100%,560px)}
+  .hero .sub{order:4;font-size:17px;padding-top:8px}.hero .cta{order:5}
+  .stack{padding:10px 10px 0 0}.cardback.u1{transform:translate(4px,-4px)}.cardback.u2{transform:translate(8px,-8px)}
 }
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.55;overflow-x:hidden}
-::selection{background:var(--teal);color:#05221c}
-a{color:inherit}
-:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:5px}
-
-/* ---------------- hero glow + point-cloud + texture ---------------- */
-#coreglow{position:fixed;left:50%;top:41%;width:48vmax;height:48vmax;transform:translate(-50%,-50%);z-index:0;pointer-events:none;
-  background:radial-gradient(circle, rgba(67,224,196,.16), rgba(67,224,196,.05) 32%, transparent 62%);filter:blur(24px);
-  animation:pulse 11s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(1)}50%{opacity:.92;transform:translate(-50%,-50%) scale(1.05)}}
-#orb{position:fixed;inset:0;z-index:0;display:block;pointer-events:none}
-/* film grain */
-.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.035;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E")}
-/* vignette to seat content */
-.vig{position:fixed;inset:0;z-index:1;pointer-events:none;
-  background:radial-gradient(130% 120% at 50% 28%, transparent 54%, rgba(6,8,11,.6) 100%)}
-#progress{position:fixed;top:0;left:0;height:2px;width:0%;background:linear-gradient(90deg,transparent,var(--teal));z-index:60;box-shadow:0 0 10px rgba(67,224,196,.4)}
-
-/* ---------------- nav ---------------- */
-nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
-  padding:22px clamp(20px,4vw,60px);transition:padding .35s ease, background .35s ease, border-color .35s ease;border-bottom:1px solid transparent}
-nav.scrolled{background:rgba(10,12,16,.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom-color:var(--line-soft);padding-top:13px;padding-bottom:13px}
-.logo{display:flex;align-items:center;gap:11px;font-family:var(--mono);font-weight:600;letter-spacing:.26em;font-size:13px;text-decoration:none;color:var(--text)}
-.logo-mark{height:20px;width:auto;display:block;transition:transform .4s cubic-bezier(.4,0,.2,1)}
-.logo:hover .logo-mark{transform:scale(1.08)}
-.nav-links{display:flex;gap:clamp(18px,2.6vw,34px);align-items:center}
-.nav-links a{font-family:var(--mono);font-size:12px;letter-spacing:.05em;color:var(--muted);text-decoration:none;transition:color .2s}
-.nav-links a:hover{color:var(--text)}
-.btn{font-family:var(--mono);font-size:12px;letter-spacing:.04em;padding:11px 20px;border-radius:9px;text-decoration:none;
-  transition:transform .22s ease, box-shadow .22s ease, background .22s ease, border-color .22s ease, color .22s ease;
-  white-space:nowrap;font-weight:500;display:inline-block;cursor:pointer}
-.btn-solid{color:#04211b;background:var(--teal);border:1px solid var(--teal)}
-.btn-solid:hover{background:#57e7cf;border-color:#57e7cf;transform:translateY(-1px);box-shadow:0 10px 34px -14px rgba(67,224,196,.6)}
-.btn-solid:active{transform:translateY(0);box-shadow:0 4px 16px -10px rgba(67,224,196,.6)}
-@media(max-width:860px){.nav-links a:not(.btn){display:none}}
-
-/* ---------------- shared ---------------- */
-section{position:relative;z-index:2}
-.wrap{max-width:1180px;margin:0 auto;padding:clamp(92px,13vh,164px) clamp(20px,4vw,60px)}
-.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--teal);display:inline-flex;align-items:center;gap:12px}
-.eyebrow::before{content:"";width:26px;height:1px;background:var(--teal);opacity:.7}
-h2{font-family:var(--display);font-weight:600;font-size:clamp(30px,4.2vw,50px);line-height:1.07;letter-spacing:-.022em;margin-top:19px;max-width:940px;text-wrap:balance}
-h2 .a{color:var(--teal)}
-.sub{font-size:clamp(15.5px,1.5vw,18px);color:var(--lead);max-width:64ch;margin-top:20px;line-height:1.62;text-wrap:pretty}
-.kick{font-family:var(--display);font-weight:500;font-size:clamp(18px,2.15vw,26px);letter-spacing:-.012em;line-height:1.36;color:var(--text);
-  margin-top:clamp(42px,6vh,70px);padding-top:28px;border-top:1px solid var(--line-soft);max-width:900px;text-wrap:balance}
-.kick .a{color:var(--teal)}
-
-/* ---------------- hero ---------------- */
-#hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;text-align:center;
-  padding:0 clamp(20px,4vw,54px) clamp(60px,10vh,116px);position:relative;z-index:5}
-#hero::before{content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(60% 48% at 50% 54%, rgba(10,11,13,.76), rgba(10,11,13,.42) 46%, transparent 74%)}
-#hero .wrap{position:relative;z-index:1}
-.hero-inner{width:100%;max-width:900px;margin:0 auto;display:flex;flex-direction:column;align-items:center}
-.h-eyebrow{font-family:var(--mono);font-size:clamp(10px,1vw,11.5px);letter-spacing:.36em;text-transform:uppercase;color:var(--muted)}
-h1{font-family:var(--display);font-weight:500;font-size:clamp(35px,5.8vw,74px);line-height:1.03;letter-spacing:-.03em;margin-top:22px;max-width:15ch;text-wrap:balance}
-h1 .a{color:var(--teal)}
-.h-sub{font-size:clamp(15px,1.5vw,18px);color:var(--lead);max-width:53ch;margin-top:22px;line-height:1.62;text-wrap:pretty}
-.h-sub b{color:var(--text);font-weight:500}
-.h-ctas{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap;justify-content:center}
-.h-ctas .btn{font-size:13px;padding:15px 30px}
-.scrollhint{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:5;font-family:var(--mono);font-size:9.5px;letter-spacing:.34em;color:var(--faint);display:flex;flex-direction:column;align-items:center;gap:10px}
-.scrollhint i{width:1px;height:34px;background:linear-gradient(var(--teal),transparent);animation:drip 2.4s ease-in-out infinite;transform-origin:top;opacity:.7}
-@keyframes drip{0%{transform:scaleY(0)}45%{transform:scaleY(1)}45.1%{transform-origin:bottom}90%,100%{transform:scaleY(0);transform-origin:bottom}}
-
-/* ---------------- problem ---------------- */
-.statline{display:flex;align-items:flex-start;gap:clamp(26px,4vw,58px);margin-top:clamp(42px,6vh,66px);flex-wrap:wrap}
-.bignum{font-family:var(--display);font-weight:600;font-size:clamp(80px,12vw,168px);line-height:.82;color:var(--block);letter-spacing:-.045em;font-variant-numeric:tabular-nums}
-.statcap{max-width:400px;padding-top:14px}
-.statcap p{font-size:clamp(15px,1.5vw,18px);color:var(--text);line-height:1.5}
-.statcap .src{font-family:var(--mono);font-size:11px;color:var(--faint);margin-top:15px;line-height:1.55}
-.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:clamp(48px,7vh,78px)}
-.card{background:linear-gradient(180deg,rgba(25,29,38,.5),rgba(20,23,30,.28));border:1px solid var(--line);border-radius:14px;padding:28px 26px;
-  transition:border-color .3s ease, transform .3s ease, background .3s ease}
-.card:hover{border-color:rgba(255,255,255,.16);transform:translateY(-3px);background:linear-gradient(180deg,rgba(28,33,43,.56),rgba(20,23,30,.32))}
-.card .t{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
-.card h3{font-family:var(--display);font-size:clamp(18px,1.9vw,22px);font-weight:500;margin-top:14px;line-height:1.2;letter-spacing:-.01em}
-.card p{font-size:14px;color:var(--muted);margin-top:11px;line-height:1.6}
-.card .x{font-family:var(--mono);font-size:11px;color:var(--block);margin-top:18px;opacity:.85;letter-spacing:.02em}
-@media(max-width:860px){.cards3{grid-template-columns:1fr}}
-
-/* ---------------- how it works ---------------- */
-.step{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,5vw,72px);align-items:center;padding:clamp(52px,8vh,96px) 0;border-bottom:1px solid var(--line-soft)}
-.step:last-of-type{border-bottom:none}
-.num{font-family:var(--mono);font-size:clamp(46px,6vw,78px);font-weight:500;color:transparent;-webkit-text-stroke:1px rgba(67,224,196,.42);line-height:1;letter-spacing:.02em}
-.step h3{font-family:var(--display);font-size:clamp(24px,3vw,35px);font-weight:600;line-height:1.1;margin-top:16px;letter-spacing:-.018em;text-wrap:balance}
-.step .p{font-size:clamp(14.5px,1.45vw,16.5px);color:var(--lead);margin-top:16px;line-height:1.66;max-width:520px;text-wrap:pretty}
-.step .p b{color:var(--text);font-weight:500}
-.fine{font-family:var(--mono);font-size:11.5px;color:var(--faint);margin-top:18px;line-height:1.65;max-width:500px}
-.tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--hold);
-  border:1px solid rgba(230,163,56,.4);border-radius:7px;padding:6px 11px;margin-top:18px;background:rgba(230,163,56,.05)}
-.tag::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--hold);box-shadow:0 0 8px rgba(230,163,56,.7);flex:0 0 auto}
-.step:nth-of-type(even) .copy{order:2}
-@media(max-width:860px){.step{grid-template-columns:1fr;gap:26px}.step:nth-of-type(even) .copy{order:0}}
-
-.viz{background:rgba(13,16,21,.72);border:1px solid var(--line);border-radius:15px;padding:22px;font-family:var(--mono);
-  box-shadow:0 30px 70px -40px rgba(0,0,0,.85), inset 0 1px 0 rgba(255,255,255,.03)}
-.viz .lab{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);display:flex;align-items:center;gap:8px}
-.viz .lab::before{content:"";width:12px;height:1px;background:var(--faint)}
-.viz .in{font-size:12.5px;color:var(--lead);margin-top:9px;line-height:1.5}.viz .in b{color:var(--text)}
-.arw{color:rgba(67,224,196,.5);text-align:center;margin:11px 0;font-size:13px}
-.model{border:1px solid rgba(67,224,196,.5);border-radius:11px;padding:15px;text-align:center;
-  background:linear-gradient(180deg,rgba(67,224,196,.08),rgba(67,224,196,.015));box-shadow:0 0 44px -16px rgba(67,224,196,.5), inset 0 1px 0 rgba(67,224,196,.14)}
-.model .f{font-size:15px;color:var(--text);font-weight:600;letter-spacing:.01em}.model .m{font-size:9px;color:var(--muted);margin-top:6px;letter-spacing:.08em;text-transform:uppercase}
-.pred{border:1px dashed rgba(67,224,196,.42);border-radius:11px;padding:4px 15px;margin-top:12px;background:rgba(67,224,196,.02)}
-.pred .r{display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:10px 0;border-bottom:1px solid var(--line-soft);font-size:12px}
-.pred .r>span:last-child{text-align:right}
-.pred .r:last-child>span:last-child{white-space:nowrap}
-.pred .r:last-child{border-bottom:none}
-.pred .k{color:var(--faint);font-size:9px;letter-spacing:.16em;text-transform:uppercase}
-.pred .irr{color:var(--hold);font-weight:600;letter-spacing:.04em}.pred .hold{color:var(--hold);font-weight:600}
-.meter{display:inline-block;width:58px;height:4px;border-radius:2px;background:rgba(255,255,255,.1);position:relative;vertical-align:middle;margin-right:9px;overflow:hidden}
-.meter i{position:absolute;inset:0 auto 0 0;width:93%;border-radius:2px;background:linear-gradient(90deg,var(--teal),#7fecdb)}
-.rts{display:flex;flex-direction:column;gap:12px}
-.rt{display:flex;align-items:center;gap:15px;background:rgba(13,16,21,.66);border:1px solid var(--line);border-radius:12px;padding:16px 18px;font-family:var(--mono);
-  transition:border-color .25s ease, transform .25s ease}
-.rt:hover{border-color:rgba(255,255,255,.15);transform:translateX(3px)}
-.rt .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
-.rt .v{font-size:12px;font-weight:600;letter-spacing:.1em;min-width:56px}.rt .d{font-size:11.5px;color:var(--muted)}
-.rt.a .dot{background:var(--allow);box-shadow:0 0 11px rgba(95,203,152,.65)}.rt.a .v{color:var(--allow)}
-.rt.h .dot{background:var(--hold);box-shadow:0 0 11px rgba(230,163,56,.65)}.rt.h .v{color:var(--hold)}
-.rt.b .dot{background:var(--block);box-shadow:0 0 11px rgba(229,97,90,.65)}.rt.b .v{color:var(--block)}
-.loop .li{display:flex;gap:15px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line-soft)}
-.loop .li:last-child{border-bottom:none}.loop .n{color:var(--teal);font-weight:600;font-size:12px;min-width:20px;letter-spacing:.04em}
-.loop .lt{font-size:12.5px;color:var(--lead);line-height:1.6}.loop .lt b{color:var(--text)}
-
-/* ---------------- vision ---------------- */
-.vcols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(22px,3.5vw,52px);margin-top:clamp(40px,5vh,62px)}
-.vcol{border-top:1px solid var(--line);padding-top:22px}
-.vcol.next{border-top-color:rgba(67,224,196,.42)}
-.vlab{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
-.vcol.next .vlab{color:var(--teal)}
-.vcol p{font-size:clamp(14px,1.4vw,16px);color:var(--lead);margin-top:14px;line-height:1.62;max-width:44ch;text-wrap:pretty}
-@media(max-width:860px){.vcols{grid-template-columns:1fr;gap:26px}}
-
-/* ---------------- founder ---------------- */
-.founder{border:1px solid var(--line);border-radius:18px;padding:clamp(28px,3.4vw,40px);
-  background:linear-gradient(160deg,rgba(25,29,38,.55),rgba(14,17,22,.35))}
-.founder.solo{max-width:660px;margin:clamp(40px,5vh,62px) auto 0}
-.founder .who{display:flex;align-items:center;gap:15px}
-.avatar{width:52px;height:52px;border-radius:50%;flex:0 0 auto;border:1px solid var(--line);
-  background:radial-gradient(circle at 35% 30%, #2a3340, #12151b);display:flex;align-items:center;justify-content:center;
-  font-family:var(--display);font-weight:600;color:var(--teal);font-size:18px;letter-spacing:.02em}
-.founder .nm{font-family:var(--display);font-weight:600;font-size:18px;white-space:nowrap}
-.founder .rl{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.04em;margin-top:4px}
-.fbio{font-size:15px;color:var(--lead);line-height:1.64;margin-top:22px;text-wrap:pretty}
-.socials{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
-.slink{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:13px;color:var(--lead);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:11px 16px;transition:border-color .2s,color .2s,background .2s}
-.slink:hover{border-color:var(--teal);color:var(--teal);background:rgba(67,224,196,.06)}
-.slink svg{flex:0 0 auto}
-
-/* ---------------- final cta ---------------- */
-#contact .wrap{padding-bottom:80px}
-.final{border:1px solid var(--line);border-radius:22px;padding:clamp(40px,6vw,80px);text-align:center;
-  background:linear-gradient(180deg,rgba(20,23,30,.5),rgba(14,17,22,.28));position:relative;overflow:hidden}
-.final::before{content:"";position:absolute;width:70%;height:200%;left:15%;top:-60%;
-  background:radial-gradient(circle, rgba(67,224,196,.1), transparent 60%);pointer-events:none}
-.final .eyebrow{justify-content:center;display:inline-flex}
-.final h2{margin-left:auto;margin-right:auto}
-.final .sub{margin:20px auto 0}
-.intake{max-width:520px;margin:32px auto 0;text-align:left;position:relative}
-.intake .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.intake .fld{margin-top:14px;display:flex;flex-direction:column}
-.intake .row2 .fld{margin-top:0}
-.intake label{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--muted);margin-bottom:7px}
-.intake input,.intake textarea{width:100%;background:rgba(10,12,16,.6);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--text);font-family:var(--body);font-size:14.5px;transition:border-color .2s,box-shadow .2s}
-.intake input::placeholder,.intake textarea::placeholder{color:var(--faint)}
-.intake input:focus,.intake textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(67,224,196,.14)}
-.intake textarea{resize:vertical;min-height:84px;line-height:1.5}
-.intake-submit{margin-top:18px;width:100%;text-align:center;cursor:pointer;font-size:13.5px;padding:14px;border:1px solid var(--teal)}
-.intake-note{margin-top:14px;font-family:var(--mono);font-size:12.5px;color:var(--teal);text-align:center}
-.intake-alt{margin-top:18px;font-family:var(--mono);font-size:12px;color:var(--muted);position:relative}
-.intake-alt a{color:var(--teal);text-decoration:none}
-.intake-alt a:hover{text-decoration:underline}
-@media(max-width:560px){.intake .row2{grid-template-columns:1fr}.intake .row2 .fld{margin-top:14px}.intake .row2 .fld:first-child{margin-top:0}}
-
-/* ---------------- footer ---------------- */
-footer{position:relative;z-index:2;border-top:1px solid var(--line-soft);padding:36px clamp(20px,4vw,60px);
-  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
-footer .fl{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.03em}
-footer .fl a{color:var(--muted);text-decoration:none;transition:color .2s}
-footer .fl a:hover{color:var(--text)}
-footer .tg{font-family:var(--mono);font-size:11px;color:var(--muted)}
-footer .tg b{color:var(--teal);font-weight:600}
-
-@media (prefers-reduced-motion: reduce){
-  html{scroll-behavior:auto}
-  #coreglow,.scrollhint i{animation:none}
+@media (max-width:760px){
+  :root{--chr:28px}
+  .navlinks{display:none}.nav .in{gap:14px}
+  .hero h1{font-size:clamp(30px,9vw,44px)}.flipnav{margin-top:6px}
+  .how-desk{height:auto}.how-stick{position:relative;top:0;height:auto;grid-template-columns:minmax(0,1fr);gap:28px;align-items:start}.how-svg{max-height:none;font-size:18px}
+  .track{grid-template-columns:minmax(0,1fr);gap:36px}.track .rail{left:6px;right:auto;top:7px;bottom:0;width:2px;height:auto}.pstep{padding:0 0 0 36px}
+  .nest-grid{grid-template-columns:minmax(0,1fr)}.sleeper{max-width:220px}
 }
+@media (max-width:420px){.brand span{display:none}.btn-sm{padding:0 14px}}
+@media (max-height:640px) and (min-width:901px){.hero-grid{gap:20px;padding:10px 0}.hero .copy{gap:14px}.hero h1{font-size:clamp(34px,4.2vw,56px)}.hero .sub{font-size:16px;line-height:1.45}.hero .cta small{display:none}.hero .stack{width:min(100%,calc((100vh - var(--nav) - 110px) * 1.39))}}
+@media (max-height:720px) and (min-width:761px){.how-stick{align-items:start;padding-top:12px}.steps{gap:14px}.step p{font-size:15px;line-height:1.45}.step h3{margin-bottom:5px}}
+@media (prefers-reduced-motion:reduce){.flipnav{display:none}.acur{animation:none}.cardw,.cardback{transition:none}.hero{height:auto}.hero-grid{position:relative;top:0;min-height:0}.hero .stackwrap{padding-bottom:0;margin-bottom:0}.hero .stack{position:relative;top:0}html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.001ms!important;transition:none!important}.how-desk{height:auto}.how-stick{position:relative;top:0;height:auto}.runner{display:none}.ticket{display:none}}
+/* standalone: JS-on initial states (no-JS and reduced motion show the answer card, unpinned) */
+html.js:not(.still) .fcard g[data-f="9"]{display:none}
+html.js:not(.still) .fcard g[data-f="1"]{display:inline}
+html.js:not(.still) .hero .stop{opacity:0}
+@media (min-width:901px){html.js:not(.still) .hero{height:calc(100vh + 1000px)}}
+html:not(.still) .acur{animation:cur 1.06s steps(1,end) infinite}
+@keyframes cur{50%{opacity:0}}
+/* flipbook caption row */
+.flipcap{display:flex;align-items:center;gap:12px;margin-top:18px;min-height:34px;font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;color:var(--muted)}
+.flipcap .tag{align-self:center;flex:none}
+.flipcap .fc-n{color:var(--ink);font-variant-numeric:tabular-nums;flex:none}
+.flipcap .fc-t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.flipcap .fc-h{flex:none;white-space:nowrap}
+.flipcap .fc-h[hidden]{display:none}
+.replay{flex:none;display:grid;place-items:center;width:34px;height:34px;padding:0;background:transparent;border:1px solid var(--ink);border-radius:50%;color:var(--ink);cursor:pointer;transition:background-color .2s,color .2s}
+.replay svg{width:16px;height:16px;display:block}
+.replay:hover{background:var(--ink);color:var(--paper)}
+.replay[hidden]{display:grid;visibility:hidden}
+.cardw:focus-visible{outline:2px solid var(--ink);outline-offset:6px}
+@media (min-width:901px){.replay[hidden]{display:none}}
+
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="rb" viewBox="0 0 700 713"><path fill="currentColor" fill-rule="evenodd" d="M130.3 697.7C98.3 668.4 81.9 641.7 75.4 608.3C73.2 597.2 72.9 570.4 74.9 556.8L76.3 547.0L114.1 546.8L152.0 546.5L152.3 514.8L152.6 483.0L132.0 482.8C120.7 482.7 110.0 482.6 108.2 482.6C104.2 482.7 104.2 482.3 108.2 475.8C143.1 418.9 198.3 374.0 263.5 349.5C295.4 337.5 332.9 329.7 366.3 328.1L380.2 327.5L386.5 310.0C397.3 280.0 409.4 253.8 419.8 238.2C424.6 231.0 424.6 231.0 422.4 231.0C419.2 231.0 384.4 222.9 372.6 219.4C290.9 195.3 233.7 149.9 199.5 82.0C195.0 73.1 186.0 51.1 186.0 49.2C186.0 47.7 193.4 47.7 210.6 49.0C302.1 56.2 376.7 98.8 442.7 181.5C448.6 188.9 453.5 194.8 453.7 194.6C454.4 193.9 447.9 178.6 441.4 165.3C414.2 109.9 365.6 66.0 310.8 47.5L299.2 43.6L297.1 34.0C294.6 23.0 293.0 13.1 293.0 7.7L293.0 4.0L297.2 4.6C341.5 11.0 383.0 27.4 418.0 52.3C454.2 78.1 489.6 120.1 510.1 161.5L516.0 173.6L524.8 174.9C561.9 180.2 606.6 199.2 637.5 222.9C652.3 234.2 678.5 260.7 691.6 277.6C696.8 284.3 697.2 287.7 694.0 300.5C684.1 339.7 648.3 367.2 590.5 379.9C582.8 381.6 570.3 383.9 562.6 385.0C555.0 386.0 548.6 387.1 548.3 387.3C547.5 388.2 570.8 394.0 579.4 395.0C584.3 395.6 595.1 396.0 603.4 395.9L618.5 395.8L620.8 407.1C624.4 424.6 624.9 450.9 622.1 470.1C615.7 514.6 597.3 548.6 559.6 585.9L550.1 595.3L556.8 603.9C571.5 622.9 622.2 686.2 631.4 697.0L641.1 708.5L573.9 708.8L506.7 709.0L496.1 698.2C484.5 686.4 469.5 674.7 456.0 666.9L447.3 661.9L449.2 655.2C454.6 636.0 457.1 607.7 455.1 588.0C448.1 519.8 405.7 470.6 341.7 456.8C327.5 453.7 292.7 453.5 277.2 456.4C271.6 457.5 267.2 458.5 267.4 458.7C267.6 459.0 272.7 459.8 278.7 460.5C338.2 467.9 379.4 494.6 402.4 540.8C416.8 569.6 420.1 603.8 411.8 639.4L409.8 648.2L406.6 647.6C385.1 643.1 356.9 642.2 337.6 645.4C323.9 647.6 308.5 651.9 295.0 657.3L284.5 661.5L305.5 662.1C340.2 663.0 363.8 668.7 386.5 681.7C398.9 688.7 415.0 701.3 418.5 706.6L420.0 709.0L281.3 709.0L142.5 708.9L130.3 697.7ZM22.8 545.2L4.0 545.0L4.0 514.5L4.0 484.0L36.0 484.0L68.0 484.0L67.8 514.5L67.5 545.0L54.5 545.2C47.3 545.4 33.1 545.4 22.8 545.2ZM600.0 260.5L600.0 234.0L572.5 234.0L545.0 234.0L545.0 260.5L545.0 287.0L572.5 287.0L600.0 287.0L600.0 260.5Z"></path></symbol>
+<filter id="rough" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="4"></feTurbulence><feDisplacementMap in="SourceGraphic" scale="2.4" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
+</defs></svg>
+<a class="skip" href="#main">Skip to content</a>
+<div class="topbar"><div class="in"><span>Taking a few pilot partners.</span><a href="https://calendar.app.google/LaUmrqoYwzVWfSuW7" target="_blank" rel="noopener">Book a call →</a></div></div>
+<nav class="nav" aria-label="Main"><div class="in">
+  <a class="brand" href="#top" aria-label="Rabit home" data-blink><svg viewBox="0 0 700 713" aria-hidden="true"><use href="#rb"></use><rect class="lid" x="545" y="234" width="55" height="53"></rect></svg><span>RABIT</span></a>
+  <div class="navlinks"><a href="#how">How it works</a><a href="#pilot">Pilot</a><a href="#faq">FAQ</a></div>
+  <a class="btn btn-sm" href="https://calendar.app.google/LaUmrqoYwzVWfSuW7" target="_blank" rel="noopener">Book a call</a>
+</div></nav>
 
-<div id="coreglow" aria-hidden="true"></div>
-<canvas id="orb" aria-hidden="true"></canvas>
-<div class="grain" aria-hidden="true"></div>
-<div class="vig" aria-hidden="true"></div>
-<div id="progress" aria-hidden="true"></div>
+<main id="main" class="pg">
+<svg class="runner" id="runner" viewBox="0 0 700 713" aria-hidden="true"><use href="#rb"></use></svg>
 
-<nav id="nav" aria-label="Primary">
-  <a class="logo" href="#hero" aria-label="Rabit home">
-    <img class="logo-mark" src="rabit-mark.png" alt="" width="20" height="20">
-    RABIT
-  </a>
-  <div class="nav-links">
-    <a href="#problem">The problem</a>
-    <a href="#how">How it works</a>
-    <a href="#approach">Vision</a>
-    <a href="#contact">Contact</a>
-    <a class="btn btn-solid" href="#contact">Let's talk</a>
-  </div>
-</nav>
-
-<!-- HERO -->
-<section id="hero">
-  <div class="wrap">
-    <div class="hero-inner">
-      <div class="h-eyebrow" data-r>Dynamic Governance for your Agents</div>
-      <h1 data-r>See the consequence <span class="a">before</span> the action.</h1>
-      <p class="h-sub" data-r>Rabit predicts what an agent's action will do — reversible or not, how far it reaches — <b>before it runs</b>. The dangerous ones wait for a human. Everything else flows.</p>
-      <div class="h-ctas" data-r>
-        <a class="btn btn-solid" href="#contact">Get in touch</a>
-      </div>
+<header class="hero" id="top" data-scene="hero">
+  <div class="hero-grid">
+    <div class="copy">
+      <p class="eyebrow"><i></i>Runtime safety for AI agents</p>
+      <h1>See the consequence before the action<span class="stop" data-a="stop"><span class="sr">.</span></span></h1>
+      <p class="sub">Your AI agents can delete, deploy and change things in production. Rabit checks each of those actions before it runs, forecasts what will happen in your systems, and flags it for a person when the answer is risky.</p>
+      <div class="cta"><a class="btn" href="https://calendar.app.google/LaUmrqoYwzVWfSuW7" target="_blank" rel="noopener">Book a call <span class="ar" aria-hidden="true">→</span></a><small>30 minutes with the founder. Bring the one agent action that worries you.</small></div>
     </div>
+    <div class="stackwrap"><div class="stack" id="stack">
+      <div class="cardw" id="card" tabindex="0" role="group" aria-roledescription="flipbook" aria-label="Example flipbook. Use the arrow keys to flip through it.">
+        <div class="cardback u2" aria-hidden="true"></div><div class="cardback u1" aria-hidden="true"></div>
+        <svg class="fcard" viewBox="0 0 600 430" role="img" aria-label="Example, drawn as a flipbook in ten cards. The agent asks to delete the secret PROD_DB_URL. The action hops to the gate and wakes the Rabit rabbit. The rabbit looks under the ground: PROD_DB_URL exists, the release workflow uses it, and the next release breaks. Rabit answers BLOCK and sends the reason back to the agent: deleting it breaks the next release. The last card is blank, for your agent&#39;s action."><rect x="1" y="1" width="598" height="428" rx="10" fill="#F7F6F0" stroke="var(--ink)" stroke-width="2"/>
+<g data-f="1"><rect x="213.8" y="39.6" width="18" height="18" fill="none" stroke="var(--ink)" stroke-width="2"/><rect x="250" y="64" width="4" height="4" fill="var(--ink)"/><rect x="330" y="46" width="4" height="4" fill="var(--ink)"/><g class="rough" transform="translate(0.3 -0.9)"><rect x="28" y="126" width="132" height="52" rx="4" fill="none" stroke="var(--ink)" stroke-width="2.6"/></g><text x="42" y="158" letter-spacing="0.12em" fill="var(--ink)">AGENT</text><rect class="acur" x="122" y="141" width="9" height="19" fill="var(--ink)"/><g fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"><path d="M44 199 l-3 -8 M44 199 l1 -11 M44 199 l4 -7"/><path d="M116 199 l-3 -8 M116 199 l1 -11 M116 199 l4 -7"/><path d="M247 199 l-3 -8 M247 199 l1 -11 M247 199 l4 -7"/><path d="M350 199 l-3 -8 M350 199 l1 -11 M350 199 l4 -7"/><path d="M380 199 l-3 -8 M380 199 l1 -11 M380 199 l4 -7"/><path d="M575 199 l-3 -8 M575 199 l1 -11 M575 199 l4 -7"/></g><path class="rough" d="M14 199.0 C 160 195.0, 420 204.8, 586 199.8" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round"/><path d="M429.5 56 L430.0 200" fill="none" stroke="var(--ink)" stroke-width="9" stroke-linecap="round"/><text x="429.5" y="44" text-anchor="middle" font-size="15" font-weight="500" letter-spacing="0.16em" fill="var(--ink)">RABIT</text><g style="transform-box:fill-box;transform-origin:50% 100%;transform:rotate(-6deg)" color="var(--ink)"><use href="#rb" x="448" y="88" width="110" height="112"/><rect x="533.1" y="124.3" width="9.6" height="9.3" fill="var(--ink)"/></g><rect x="566" y="98" width="5" height="5" fill="var(--ink)"/><rect x="575" y="84" width="7" height="7" fill="var(--ink)"/><rect x="584" y="66" width="9" height="9" fill="var(--ink)"/></g>
+<g data-f="2"><g class="rough" transform="translate(-0.6 0.3)"><rect x="28" y="126" width="132" height="52" rx="4" fill="none" stroke="var(--ink)" stroke-width="2.6"/></g><text x="42" y="158" letter-spacing="0.12em" fill="var(--ink)">AGENT</text><rect class="acur" x="122" y="141" width="9" height="19" fill="var(--ink)"/><g fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"><path d="M49 199 l-3 -8 M49 199 l1 -11 M49 199 l4 -7"/><path d="M119 199 l-3 -8 M119 199 l1 -11 M119 199 l4 -7"/><path d="M251 199 l-3 -8 M251 199 l1 -11 M251 199 l4 -7"/><path d="M356 199 l-3 -8 M356 199 l1 -11 M356 199 l4 -7"/><path d="M381 199 l-3 -8 M381 199 l1 -11 M381 199 l4 -7"/><path d="M580 199 l-3 -8 M580 199 l1 -11 M580 199 l4 -7"/></g><path class="rough" d="M14 199.5 C 160 195.1, 420 204.1, 586 198.5" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round"/><path d="M430.4 56 L430.9 200" fill="none" stroke="var(--ink)" stroke-width="9" stroke-linecap="round"/><text x="430.4" y="44" text-anchor="middle" font-size="15" font-weight="500" letter-spacing="0.16em" fill="var(--ink)">RABIT</text><text x="28" y="104" fill="var(--ink)">delete the secret PROD_DB_URL</text><path d="M162 152 L176 152" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round"/><rect x="180" y="184" width="16" height="16" fill="var(--ink)"/><g style="transform-box:fill-box;transform-origin:50% 100%;transform:rotate(-6deg) translateY(1px)" color="var(--ink)"><use href="#rb" x="448" y="88" width="110" height="112"/><rect x="533.1" y="124.3" width="9.6" height="9.3" fill="var(--ink)"/></g></g>
+<g data-f="3"><g class="rough" transform="translate(-0.6 0.2)"><rect x="28" y="126" width="132" height="52" rx="4" fill="none" stroke="var(--ink)" stroke-width="2.6"/></g><text x="42" y="158" letter-spacing="0.12em" fill="var(--ink)">AGENT</text><g fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"><path d="M46 199 l-3 -8 M46 199 l1 -11 M46 199 l4 -7"/><path d="M116 199 l-3 -8 M116 199 l1 -11 M116 199 l4 -7"/><path d="M253 199 l-3 -8 M253 199 l1 -11 M253 199 l4 -7"/><path d="M345 199 l-3 -8 M345 199 l1 -11 M345 199 l4 -7"/><path d="M381 199 l-3 -8 M381 199 l1 -11 M381 199 l4 -7"/><path d="M572 199 l-3 -8 M572 199 l1 -11 M572 199 l4 -7"/></g><path class="rough" d="M14 200.4 C 160 195.8, 420 204.6, 586 199.2" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round"/><path d="M429.9 56 L430.4 200" fill="none" stroke="var(--ink)" stroke-width="9" stroke-linecap="round"/><text x="429.9" y="44" text-anchor="middle" font-size="15" font-weight="500" letter-spacing="0.16em" fill="var(--ink)">RABIT</text><text x="28" y="104" fill="var(--ink)">delete the secret PROD_DB_URL</text><rect x="214" y="192" width="8" height="8" fill="var(--ink)"/><rect x="226" y="192" width="8" height="8" fill="var(--ink)"/><path d="M196 194 Q 268 110 346 194" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="3 6" opacity=".5"/><rect x="262" y="138" width="16" height="16" fill="var(--ink)"/><g style="transform-box:fill-box;transform-origin:50% 100%;transform:rotate(-2deg)" color="var(--ink)"><use href="#rb" x="448" y="88" width="110" height="112"/></g><path d="M488 84 l3 -10 M502 82 l-2 -10" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round"/></g>
+<g data-f="4"><g class="rough" transform="translate(-0.4 0.6)"><rect x="28" y="126" width="132" height="52" rx="4" fill="none" stroke="var(--ink)" stroke-width="2.6"/></g><text x="42" y="158" letter-spacing="0.12em" fill="var(--ink)">AGENT</text><g fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"><path d="M46 199 l-3 -8 M46 199 l1 -11 M46 199 l4 -7"/><path d="M115 199 l-3 -8 M115 199 l1 -11 M115 199 l4 -7"/><path d="M253 199 l-3 -8 M253 199 l1 -11 M253 199 l4 -7"/><path d="M350 199 l-3 -8 M350 199 l1 -11 M350 199 l4 -7"/><path d="M391 199 l-3 -8 M391 199 l1 -11 M391 199 l4 -7"/><path d="M579 199 l-3 -8 M579 199 l1 -11 M579 199 l4 -7"/></g><path class="rough" d="M14 199.5 C 160 197.2, 420 204.1, 586 198.8" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round"/><path d="M430.3 56 L430.8 200" fill="none" stroke="var(--ink)" stroke-width="9" stroke-linecap="round"/><text x="430.3" y="44" text-anchor="middle" font-size="15" font-weight="500" letter-spacing="0.16em" fill="var(--ink)">RABIT</text><text x="28" y="104" fill="var(--ink)">delete the secret PROD_DB_URL</text><rect x="214" y="192" width="8" height="8" fill="var(--ink)"/><rect x="226" y="192" width="8" height="8" fill="var(--ink)"/><rect x="300" y="192" width="8" height="8" fill="var(--ink)"/><rect x="312" y="192" width="8" height="8" fill="var(--ink)"/><rect x="408" y="184" width="16" height="16" fill="var(--ink)"/><g style="transform-box:fill-box;transform-origin:50% 100%;transform:translateY(-14px) rotate(2deg)" color="var(--ink)"><use href="#rb" x="448" y="88" width="110" height="112"/></g><path d="M466 62 l2 -11 M482 58 l-1 -11 M450 70 l-6 -8" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round"/></g>
+<g data-f="5"><path class="rough" d="M14 200 C 160 195.2, 420 205.0, 586 197.9 L586 416 L14 416 Z" fill="var(--sand)"/><g fill="var(--ink)" opacity=".55"><rect x="62.7" y="239.1" width="5" height="5"/><rect x="338.3" y="233.5" width="4" height="4"/><rect x="561.3" y="262.8" width="5" height="5"/><rect x="92.4" y="358.3" width="4" height="4"/><rect x="295.8" y="399.4" width="5" height="5"/><rect x="549.8" y="351.9" width="4" height="4"/><rect x="150.7" y="390.2" width="3" height="3"/></g><g class="rough" transform="translate(0.4 0.3)"><rect x="28" y="126" width="132" height="52" rx="4" fill="none" stroke="var(--ink)" stroke-width="2.6"/></g><text x="42" y="158" letter-spacing="0.12em" fill="var(--ink)">AGENT</text><g fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"><path d="M50 199 l-3 -8 M50 199 l1 -11 M50 199 l4 -7"/><path d="M122 199 l-3 -8 M122 199 l1 -11 M122 199 l4 -7"/><path d="M249 199 l-3 -8 M249 199 l1 -11 M249 199 l4 -7"/><path d="M349 199 l-3 -8 M349 199 l1 -11 M349 199 l4 -7"/><path d="M388 199 l-3 -8 M388 199 l1 -11 M388 199 l4 -7"/><path d="M570 199 l-3 -8 M570 199 l1 -11 M570 199 l4 -7"/></g><path class="rough" d="M14 199.9 C 160 195.2, 420 204.1, 586 197.9" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round"/><path d="M430.3 56 L430.8 200" fill="none" stroke="var(--ink)" stroke-width="9" stroke-linecap="round"/><text x="430.3" y="44" text-anchor="middle" font-size="15" font-weight="500" letter-spacing="0.16em" fill="var(--ink)">RABIT</text><text x="28" y="104" fill="var(--ink)">delete the secret PROD_DB_URL</text><rect x="214" y="192" width="8" height="8" fill="var(--ink)"/><rect x="226" y="192" width="8" height="8" fill="var(--ink)"/><rect x="300" y="192" width="8" height="8" fill="var(--ink)"/><rect x="312" y="192" width="8" height="8" fill="var(--ink)"/><rect x="408" y="184" width="16" height="16" fill="var(--ink)"/><path d="M522 202 C 522 222, 512 236, 498 242" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-dasharray="0.5 8" stroke-linecap="round"/><g style="transform-box:fill-box;transform-origin:50% 100%;transform:rotate(16deg)" color="var(--ink)"><use href="#rb" x="448" y="88" width="110" height="112"/></g></g>
+<g data-f="6"><path class="rough" d="M14 200 C 160 195.1, 420 204.4, 586 198.7 L586 416 L14 416 Z" fill="var(--sand)"/><g fill="var(--ink)" opacity=".55"><rect x="63.5" y="236.3" width="5" height="5"/><rect x="337.8" y="232.2" width="4" height="4"/><rect x="563.5" y="263.3" width="5" height="5"/><rect x="93.5" y="357.1" width="4" height="4"/><rect x="295.7" y="397.4" width="5" height="5"/><rect x="549.5" y="353.8" width="4" height="4"/><rect x="148.6" y="390.7" width="3" height="3"/></g><g class="rough" transform="translate(-0.5 -0.5)"><rect x="28" y="126" width="132" height="52" rx="4" fill="none" stroke="var(--ink)" stroke-width="2.6"/></g><text x="42" y="158" letter-spacing="0.12em" fill="var(--ink)">AGENT</text><g fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"><path d="M44 199 l-3 -8 M44 199 l1 -11 M44 199 l4 -7"/><path d="M119 199 l-3 -8 M119 199 l1 -11 M119 199 l4 -7"/><path d="M249 199 l-3 -8 M249 199 l1 -11 M249 199 l4 -7"/><path d="M344 199 l-3 -8 M344 199 l1 -11 M344 199 l4 -7"/><path d="M385 199 l-3 -8 M385 199 l1 -11 M385 199 l4 -7"/><path d="M574 199 l-3 -8 M574 199 l1 -11 M574 199 l4 -7"/></g><path class="rough" d="M14 200.2 C 160 197.1, 420 205.5, 586 199.0" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round"/><path d="M430.1 56 L430.6 200" fill="none" stroke="var(--ink)" stroke-width="9" stroke-linecap="round"/><text x="430.1" y="44" text-anchor="middle" font-size="15" font-weight="500" letter-spacing="0.16em" fill="var(--ink)">RABIT</text><text x="28" y="104" fill="var(--ink)">delete the secret PROD_DB_URL</text><rect x="214" y="192" width="8" height="8" fill="var(--ink)"/><rect x="226" y="192" width="8" height="8" fill="var(--ink)"/><rect x="300" y="192" width="8" height="8" fill="var(--ink)"/><rect x="312" y="192" width="8" height="8" fill="var(--ink)"/><rect x="408" y="184" width="16" height="16" fill="var(--ink)"/><path d="M522 202 C 522 222, 512 236, 498 242" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-dasharray="0.5 8" stroke-linecap="round"/><g class="rough"><ellipse cx="486" cy="252" rx="54" ry="17" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.2"/></g><rect x="479" y="245" width="14" height="14" fill="var(--ink)"/><text x="422" y="244" text-anchor="end" fill="var(--ink)" paint-order="stroke" stroke="var(--sand)" stroke-width="7">PROD_DB_URL</text><g style="transform-box:fill-box;transform-origin:50% 100%;transform:rotate(13deg)" color="var(--ink)"><use href="#rb" x="448" y="88" width="110" height="112"/></g></g>
+<g data-f="7"><path class="rough" d="M14 200 C 160 196.4, 420 203.9, 586 200.0 L586 416 L14 416 Z" fill="var(--sand)"/><g fill="var(--ink)" opacity=".55"><rect x="63.1" y="239.5" width="5" height="5"/><rect x="339.2" y="231.6" width="4" height="4"/><rect x="561.6" y="260.4" width="5" height="5"/><rect x="92.5" y="356.2" width="4" height="4"/><rect x="294.3" y="396.8" width="5" height="5"/><rect x="546.6" y="351.4" width="4" height="4"/><rect x="148.2" y="390.0" width="3" height="3"/></g><g class="rough" transform="translate(-0.7 -0.8)"><rect x="28" y="126" width="132" height="52" rx="4" fill="none" stroke="var(--ink)" stroke-width="2.6"/></g><text x="42" y="158" letter-spacing="0.12em" fill="var(--ink)">AGENT</text><g fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"><path d="M42 199 l-3 -8 M42 199 l1 -11 M42 199 l4 -7"/><path d="M112 199 l-3 -8 M112 199 l1 -11 M112 199 l4 -7"/><path d="M256 199 l-3 -8 M256 199 l1 -11 M256 199 l4 -7"/><path d="M351 199 l-3 -8 M351 199 l1 -11 M351 199 l4 -7"/><path d="M382 199 l-3 -8 M382 199 l1 -11 M382 199 l4 -7"/><path d="M573 199 l-3 -8 M573 199 l1 -11 M573 199 l4 -7"/></g><path class="rough" d="M14 199.6 C 160 195.7, 420 204.1, 586 199.8" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round"/><path d="M430.6 56 L431.1 200" fill="none" stroke="var(--ink)" stroke-width="9" stroke-linecap="round"/><text x="430.6" y="44" text-anchor="middle" font-size="15" font-weight="500" letter-spacing="0.16em" fill="var(--ink)">RABIT</text><text x="28" y="104" fill="var(--ink)">delete the secret PROD_DB_URL</text><rect x="214" y="192" width="8" height="8" fill="var(--ink)"/><rect x="226" y="192" width="8" height="8" fill="var(--ink)"/><rect x="300" y="192" width="8" height="8" fill="var(--ink)"/><rect x="312" y="192" width="8" height="8" fill="var(--ink)"/><rect x="408" y="184" width="16" height="16" fill="var(--ink)"/><path d="M522 202 C 522 222, 512 236, 498 242" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-dasharray="0.5 8" stroke-linecap="round"/><g class="rough"><ellipse cx="486" cy="252" rx="54" ry="17" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.2"/></g><rect x="479" y="245" width="14" height="14" fill="var(--ink)"/><text x="422" y="244" text-anchor="end" fill="var(--ink)" paint-order="stroke" stroke="var(--sand)" stroke-width="7">PROD_DB_URL</text><path d="M438 258 C 394 278, 330 296, 268 306" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-dasharray="0.5 8" stroke-linecap="round"/><g class="rough"><ellipse cx="196" cy="312" rx="72" ry="18" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.2"/></g><rect x="189" y="305" width="14" height="14" fill="var(--ink)"/><text x="196" y="274" text-anchor="middle" fill="var(--ink)" paint-order="stroke" stroke="var(--sand)" stroke-width="7">release workflow uses it</text><g style="transform-box:fill-box;transform-origin:50% 100%;transform:rotate(11deg)" color="var(--ink)"><use href="#rb" x="448" y="88" width="110" height="112"/></g></g>
+<g data-f="8"><path class="rough" d="M14 200 C 160 195.9, 420 205.0, 586 198.0 L586 416 L14 416 Z" fill="var(--sand)"/><g fill="var(--ink)" opacity=".55"><rect x="60.4" y="237.4" width="5" height="5"/><rect x="337.1" y="233.3" width="4" height="4"/><rect x="560.6" y="260.1" width="5" height="5"/><rect x="93.8" y="358.1" width="4" height="4"/><rect x="294.6" y="398.2" width="5" height="5"/><rect x="546.1" y="352.1" width="4" height="4"/><rect x="151.9" y="393.5" width="3" height="3"/></g><g class="rough" transform="translate(0.4 -0.5)"><rect x="28" y="126" width="132" height="52" rx="4" fill="none" stroke="var(--ink)" stroke-width="2.6"/></g><text x="42" y="158" letter-spacing="0.12em" fill="var(--ink)">AGENT</text><g fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"><path d="M42 199 l-3 -8 M42 199 l1 -11 M42 199 l4 -7"/><path d="M114 199 l-3 -8 M114 199 l1 -11 M114 199 l4 -7"/><path d="M255 199 l-3 -8 M255 199 l1 -11 M255 199 l4 -7"/><path d="M350 199 l-3 -8 M350 199 l1 -11 M350 199 l4 -7"/><path d="M389 199 l-3 -8 M389 199 l1 -11 M389 199 l4 -7"/><path d="M574 199 l-3 -8 M574 199 l1 -11 M574 199 l4 -7"/></g><path class="rough" d="M14 199.3 C 160 196.7, 420 206.2, 586 199.8" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round"/><path d="M430.4 56 L430.9 200" fill="none" stroke="var(--ink)" stroke-width="9" stroke-linecap="round"/><text x="430.4" y="44" text-anchor="middle" font-size="15" font-weight="500" letter-spacing="0.16em" fill="var(--ink)">RABIT</text><text x="28" y="104" fill="var(--ink)">delete the secret PROD_DB_URL</text><rect x="214" y="192" width="8" height="8" fill="var(--ink)"/><rect x="226" y="192" width="8" height="8" fill="var(--ink)"/><rect x="300" y="192" width="8" height="8" fill="var(--ink)"/><rect x="312" y="192" width="8" height="8" fill="var(--ink)"/><rect x="408" y="184" width="16" height="16" fill="var(--ink)"/><path d="M522 202 C 522 222, 512 236, 498 242" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-dasharray="0.5 8" stroke-linecap="round"/><g class="rough"><ellipse cx="486" cy="252" rx="54" ry="17" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.2"/></g><rect x="479" y="245" width="14" height="14" fill="var(--ink)"/><text x="422" y="244" text-anchor="end" fill="var(--ink)" paint-order="stroke" stroke="var(--sand)" stroke-width="7">PROD_DB_URL</text><path d="M438 258 C 394 278, 330 296, 268 306" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-dasharray="0.5 8" stroke-linecap="round"/><g class="rough"><ellipse cx="196" cy="312" rx="72" ry="18" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.2"/></g><rect x="189" y="305" width="14" height="14" fill="var(--ink)"/><text x="196" y="274" text-anchor="middle" fill="var(--ink)" paint-order="stroke" stroke="var(--sand)" stroke-width="7">release workflow uses it</text><path d="M236 328 C 276 352, 330 368, 368 372" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-dasharray="0.5 8" stroke-linecap="round"/><g class="rough"><ellipse cx="430" cy="372" rx="62" ry="17" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.2"/></g><rect x="423" y="365" width="14" height="14" fill="var(--rust)"/><text x="430" y="412" text-anchor="middle" fill="var(--ink)" paint-order="stroke" stroke="var(--sand)" stroke-width="7">next release breaks</text><text x="586" y="304" text-anchor="end" font-size="13" letter-spacing="0.14em" fill="var(--muted)">FORECAST</text><g style="transform-box:fill-box;transform-origin:50% 100%;transform:rotate(9deg)" color="var(--ink)"><use href="#rb" x="448" y="88" width="110" height="112"/></g></g>
+<g data-f="9"><path class="rough" d="M14 200 C 160 195.9, 420 204.7, 586 198.1 L586 416 L14 416 Z" fill="var(--sand)"/><g fill="var(--ink)" opacity=".55"><rect x="63.5" y="236.0" width="5" height="5"/><rect x="338.0" y="233.6" width="4" height="4"/><rect x="560.3" y="262.2" width="5" height="5"/><rect x="92.5" y="356.2" width="4" height="4"/><rect x="295.5" y="398.8" width="5" height="5"/><rect x="547.8" y="352.9" width="4" height="4"/><rect x="148.6" y="391.0" width="3" height="3"/></g><g class="rough" transform="translate(-0.8 0.0)"><rect x="28" y="126" width="132" height="52" rx="4" fill="none" stroke="var(--ink)" stroke-width="2.6"/></g><text x="42" y="158" letter-spacing="0.12em" fill="var(--ink)">AGENT</text><g fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"><path d="M49 199 l-3 -8 M49 199 l1 -11 M49 199 l4 -7"/><path d="M119 199 l-3 -8 M119 199 l1 -11 M119 199 l4 -7"/><path d="M255 199 l-3 -8 M255 199 l1 -11 M255 199 l4 -7"/><path d="M349 199 l-3 -8 M349 199 l1 -11 M349 199 l4 -7"/><path d="M389 199 l-3 -8 M389 199 l1 -11 M389 199 l4 -7"/><path d="M571 199 l-3 -8 M571 199 l1 -11 M571 199 l4 -7"/></g><path class="rough" d="M14 199.5 C 160 196.4, 420 205.5, 586 198.8" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round"/><path d="M429.5 56 L430.0 200" fill="none" stroke="var(--ink)" stroke-width="9" stroke-linecap="round"/><text x="429.5" y="44" text-anchor="middle" font-size="15" font-weight="500" letter-spacing="0.16em" fill="var(--ink)">RABIT</text><text x="28" y="104" fill="var(--ink)">Deleting it breaks the next release.</text><path d="M422 117 C 340 118.5, 260 115.5, 176 117" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round"/><rect x="164" y="111" width="12" height="12" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.4"/><rect x="214" y="192" width="8" height="8" fill="var(--ink)"/><rect x="226" y="192" width="8" height="8" fill="var(--ink)"/><rect x="300" y="192" width="8" height="8" fill="var(--ink)"/><rect x="312" y="192" width="8" height="8" fill="var(--ink)"/><rect x="408" y="184" width="16" height="16" fill="var(--ink)"/><path d="M522 202 C 522 222, 512 236, 498 242" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-dasharray="0.5 8" stroke-linecap="round"/><g class="rough"><ellipse cx="486" cy="252" rx="54" ry="17" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.2"/></g><rect x="479" y="245" width="14" height="14" fill="var(--ink)"/><text x="422" y="244" text-anchor="end" fill="var(--ink)" paint-order="stroke" stroke="var(--sand)" stroke-width="7">PROD_DB_URL</text><path d="M438 258 C 394 278, 330 296, 268 306" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-dasharray="0.5 8" stroke-linecap="round"/><g class="rough"><ellipse cx="196" cy="312" rx="72" ry="18" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.2"/></g><rect x="189" y="305" width="14" height="14" fill="var(--ink)"/><text x="196" y="274" text-anchor="middle" fill="var(--ink)" paint-order="stroke" stroke="var(--sand)" stroke-width="7">release workflow uses it</text><path d="M236 328 C 276 352, 330 368, 368 372" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-dasharray="0.5 8" stroke-linecap="round"/><g class="rough"><ellipse cx="430" cy="372" rx="62" ry="17" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.2"/></g><rect x="423" y="365" width="14" height="14" fill="var(--rust)"/><text x="430" y="412" text-anchor="middle" fill="var(--ink)" paint-order="stroke" stroke="var(--sand)" stroke-width="7">next release breaks</text><text x="586" y="304" text-anchor="end" font-size="13" letter-spacing="0.14em" fill="var(--muted)">FORECAST</text><g style="transform-box:fill-box;transform-origin:50% 100%;transform:rotate(0deg)" color="var(--ink)"><use href="#rb" x="448" y="88" width="110" height="112"/></g><g transform="rotate(-6 532 44)"><rect x="480" y="24" width="104" height="40" fill="var(--rust)"/><text x="532" y="51" text-anchor="middle" font-size="18" font-weight="600" letter-spacing="0.14em" fill="#EEEEE6">BLOCK</text></g></g>
+<g data-f="10"><rect x="12" y="12" width="576" height="406" rx="8" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="4 7"/><g class="rough" transform="translate(0.1 -0.1)"><rect x="28" y="126" width="132" height="52" rx="4" fill="none" stroke="var(--ink)" stroke-width="2.6"/></g><text x="42" y="158" letter-spacing="0.12em" fill="var(--ink)">AGENT</text><g fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"><path d="M45 199 l-3 -8 M45 199 l1 -11 M45 199 l4 -7"/><path d="M114 199 l-3 -8 M114 199 l1 -11 M114 199 l4 -7"/><path d="M256 199 l-3 -8 M256 199 l1 -11 M256 199 l4 -7"/><path d="M354 199 l-3 -8 M354 199 l1 -11 M354 199 l4 -7"/><path d="M388 199 l-3 -8 M388 199 l1 -11 M388 199 l4 -7"/><path d="M572 199 l-3 -8 M572 199 l1 -11 M572 199 l4 -7"/></g><path class="rough" d="M14 200.0 C 160 195.6, 420 204.4, 586 200.1" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round"/><path d="M430.6 56 L431.1 200" fill="none" stroke="var(--ink)" stroke-width="9" stroke-linecap="round"/><text x="430.6" y="44" text-anchor="middle" font-size="15" font-weight="500" letter-spacing="0.16em" fill="var(--ink)">RABIT</text><text x="28" y="104" fill="var(--muted)">agent&gt;</text><rect class="acur" x="104" y="89" width="9" height="19" fill="var(--ink)"/><text x="28" y="292" font-family="Host Grotesk, sans-serif" font-size="34" letter-spacing="-0.02em" fill="var(--ink)">Your agent's action here.</text><text x="28" y="336" fill="var(--ink)">Bring it to the call →</text><g style="transform-box:fill-box;transform-origin:50% 100%;transform:rotate(-3deg)" color="var(--ink)"><use href="#rb" x="448" y="88" width="110" height="112"/></g></g>
+<g data-f="9b"><path class="rough" d="M14 200 C 160 195.9, 420 204.7, 586 198.1 L586 416 L14 416 Z" fill="var(--sand)"/><g fill="var(--ink)" opacity=".55"><rect x="63.5" y="236.0" width="5" height="5"/><rect x="338.0" y="233.6" width="4" height="4"/><rect x="560.3" y="262.2" width="5" height="5"/><rect x="92.5" y="356.2" width="4" height="4"/><rect x="295.5" y="398.8" width="5" height="5"/><rect x="547.8" y="352.9" width="4" height="4"/><rect x="148.6" y="391.0" width="3" height="3"/></g><g class="rough" transform="translate(-0.8 0.0)"><rect x="28" y="126" width="132" height="52" rx="4" fill="none" stroke="var(--ink)" stroke-width="2.6"/></g><text x="42" y="158" letter-spacing="0.12em" fill="var(--ink)">AGENT</text><g fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"><path d="M49 199 l-3 -8 M49 199 l1 -11 M49 199 l4 -7"/><path d="M119 199 l-3 -8 M119 199 l1 -11 M119 199 l4 -7"/><path d="M255 199 l-3 -8 M255 199 l1 -11 M255 199 l4 -7"/><path d="M349 199 l-3 -8 M349 199 l1 -11 M349 199 l4 -7"/><path d="M389 199 l-3 -8 M389 199 l1 -11 M389 199 l4 -7"/><path d="M571 199 l-3 -8 M571 199 l1 -11 M571 199 l4 -7"/></g><path class="rough" d="M14 199.5 C 160 196.4, 420 205.5, 586 198.8" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round"/><path d="M429.5 56 L430.0 200" fill="none" stroke="var(--ink)" stroke-width="9" stroke-linecap="round"/><text x="429.5" y="44" text-anchor="middle" font-size="15" font-weight="500" letter-spacing="0.16em" fill="var(--ink)">RABIT</text><text x="28" y="104" fill="var(--ink)">Deleting it breaks the next release.</text><path d="M422 117 C 340 118.5, 260 115.5, 176 117" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round"/><rect x="164" y="111" width="12" height="12" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.4"/><rect x="214" y="192" width="8" height="8" fill="var(--ink)"/><rect x="226" y="192" width="8" height="8" fill="var(--ink)"/><rect x="300" y="192" width="8" height="8" fill="var(--ink)"/><rect x="312" y="192" width="8" height="8" fill="var(--ink)"/><rect x="408" y="184" width="16" height="16" fill="var(--ink)"/><path d="M522 202 C 522 222, 512 236, 498 242" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-dasharray="0.5 8" stroke-linecap="round"/><g class="rough"><ellipse cx="486" cy="252" rx="54" ry="17" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.2"/></g><rect x="479" y="245" width="14" height="14" fill="var(--ink)"/><text x="422" y="244" text-anchor="end" fill="var(--ink)" paint-order="stroke" stroke="var(--sand)" stroke-width="7">PROD_DB_URL</text><path d="M438 258 C 394 278, 330 296, 268 306" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-dasharray="0.5 8" stroke-linecap="round"/><g class="rough"><ellipse cx="196" cy="312" rx="72" ry="18" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.2"/></g><rect x="189" y="305" width="14" height="14" fill="var(--ink)"/><text x="196" y="274" text-anchor="middle" fill="var(--ink)" paint-order="stroke" stroke="var(--sand)" stroke-width="7">release workflow uses it</text><path d="M236 328 C 276 352, 330 368, 368 372" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-dasharray="0.5 8" stroke-linecap="round"/><g class="rough"><ellipse cx="430" cy="372" rx="62" ry="17" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.2"/></g><rect x="423" y="365" width="14" height="14" fill="var(--rust)"/><text x="430" y="412" text-anchor="middle" fill="var(--ink)" paint-order="stroke" stroke="var(--sand)" stroke-width="7">next release breaks</text><text x="586" y="304" text-anchor="end" font-size="13" letter-spacing="0.14em" fill="var(--muted)">FORECAST</text><g style="transform-box:fill-box;transform-origin:50% 100%;transform:rotate(0deg)" color="var(--ink)"><use href="#rb" x="448" y="88" width="110" height="112"/><rect x="533.1" y="124.3" width="9.6" height="9.3" fill="var(--ink)"/></g><g transform="rotate(-6 532 44)"><rect x="480" y="24" width="104" height="40" fill="var(--rust)"/><text x="532" y="51" text-anchor="middle" font-size="18" font-weight="600" letter-spacing="0.14em" fill="#EEEEE6">BLOCK</text></g></g>
+<g data-f="10b"><rect x="12" y="12" width="576" height="406" rx="8" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="4 7"/><g class="rough" transform="translate(0.1 -0.1)"><rect x="28" y="126" width="132" height="52" rx="4" fill="none" stroke="var(--ink)" stroke-width="2.6"/></g><text x="42" y="158" letter-spacing="0.12em" fill="var(--ink)">AGENT</text><g fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"><path d="M45 199 l-3 -8 M45 199 l1 -11 M45 199 l4 -7"/><path d="M114 199 l-3 -8 M114 199 l1 -11 M114 199 l4 -7"/><path d="M256 199 l-3 -8 M256 199 l1 -11 M256 199 l4 -7"/><path d="M354 199 l-3 -8 M354 199 l1 -11 M354 199 l4 -7"/><path d="M388 199 l-3 -8 M388 199 l1 -11 M388 199 l4 -7"/><path d="M572 199 l-3 -8 M572 199 l1 -11 M572 199 l4 -7"/></g><path class="rough" d="M14 200.0 C 160 195.6, 420 204.4, 586 200.1" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round"/><path d="M430.6 56 L431.1 200" fill="none" stroke="var(--ink)" stroke-width="9" stroke-linecap="round"/><text x="430.6" y="44" text-anchor="middle" font-size="15" font-weight="500" letter-spacing="0.16em" fill="var(--ink)">RABIT</text><text x="28" y="104" fill="var(--muted)">agent&gt;</text><rect class="acur" x="104" y="89" width="9" height="19" fill="var(--ink)"/><text x="28" y="292" font-family="Host Grotesk, sans-serif" font-size="34" letter-spacing="-0.02em" fill="var(--ink)">Your agent's action here.</text><text x="28" y="336" fill="var(--ink)">Bring it to the call →</text><g style="transform-box:fill-box;transform-origin:50% 100%;transform:rotate(-3deg)" color="var(--ink)"><use href="#rb" x="448" y="88" width="110" height="112"/><rect x="533.1" y="124.3" width="9.6" height="9.3" fill="var(--ink)"/></g></g>
+</svg>
+        <a class="cardlink" href="https://calendar.app.google/LaUmrqoYwzVWfSuW7" target="_blank" rel="noopener" tabindex="-1" aria-label="Bring your agent&#39;s action to the call: book a call">Book a call</a>
+        <button type="button" class="ear" tabindex="-1" aria-label="Flip back one card"></button>
+      </div>
+      <div class="flipcap"><span class="tag">Example</span><span class="fc-n" data-a="count" aria-hidden="true">09 / 10</span><span class="fc-t" data-a="cap" aria-hidden="true">the answer</span><span class="fc-h" data-a="hint" aria-hidden="true" hidden>scroll to flip</span><button type="button" class="replay" data-a="replay" aria-label="Play the example again" title="Play again" hidden><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M15.5 6.2A7 7 0 1 0 17 11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16.6 2.4v4.6H12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    </div></div>
   </div>
-  <div class="scrollhint"><span>SCROLL</span><i></i></div>
+  <svg class="hground" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true"><path d="M0 4 C 25 3, 50 5, 100 4" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round" style="vector-effect:non-scaling-stroke"></path></svg>
+</header>
+
+<svg class="tun" data-tunnel viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><clipPath id="tc1"><rect data-clip x="-5" y="-20" width="110" height="140"></rect></clipPath><g clip-path="url(#tc1)"><path d="M28 0 C28 55, 72 45, 72 100" stroke="var(--ink)" stroke-width="22"></path><path d="M28 0 C28 55, 72 45, 72 100" stroke="var(--paper)" stroke-width="15"></path></g></svg>
+
+<section class="ch" aria-labelledby="prob-h" data-ch><svg class="outline" aria-hidden="true"><rect class="rough" data-a="ol" width="100%" height="100%"></rect></svg>
+  <div class="head"><p class="kicker"><i></i><i></i>The problem</p><h2 class="h2" id="prob-h" style="max-width:15ch">Permission isn't safety. Once it's done, it's done.</h2><p class="lead" style="max-width:62ch">Teams give agents access so they can do real work: rotate a secret, clean up a database, ship a fix. Access answers one question, may this agent do it? It never answers the one that matters, what happens if it does? An agent can be fully authorized and still delete the wrong thing at the wrong moment, because it was wrong, or because something it read told it to.</p></div>
+  <div class="stats" data-scene="stats">
+    <div class="card" data-a="card"><div class="n" data-count="49.8">49.8%</div><p>of organizations confirmed or suspected an AI agent took an unintended or unauthorized action in the past year</p><a href="https://campustechnology.com/articles/2026/10/21/unexpected-ai-agent-activity-reported-by-nearly-half-of-organizations-in-recent-survey.aspx" target="_blank" rel="noopener">Salt Security, State of Agentic AI and API Security, 2H 2026</a></div>
+    <div class="card" data-a="card"><div class="n" data-count="17.5">17.5%</div><p>can automatically stop an agent that starts behaving unexpectedly in production</p><a href="https://campustechnology.com/articles/2026/10/21/unexpected-ai-agent-activity-reported-by-nearly-half-of-organizations-in-recent-survey.aspx" target="_blank" rel="noopener">same survey</a></div>
+    <div class="card" data-a="card"><div class="n" data-type="July 2025">July 2025</div><p>an AI coding agent on Replit deleted a company's live production database after being told not to change code</p><a href="https://oecd.ai/en/incidents/2025-07-19-1eb1" target="_blank" rel="noopener">OECD AI Incidents Monitor</a></div>
+  </div>
+  <div class="today"><h3>What teams use today</h3><div>
+    <div class="srow" data-scene="strike"><svg viewBox="0 0 28 28" width="28" height="28" aria-hidden="true"><rect x="8" y="8" width="12" height="12" fill="var(--ink)"></rect><g class="rough" fill="none" stroke-linecap="round"><path data-a="strike" d="M1 25 L27 3" stroke="var(--sand)" stroke-width="6"></path><path data-a="strike" d="M1 25 L27 3" stroke="var(--ink)" stroke-width="2.4"></path></g></svg><p>Guardrails and filters catch what they have seen before. A new mistake looks normal.</p></div>
+    <div class="srow" data-scene="strike"><svg viewBox="0 0 28 28" width="28" height="28" aria-hidden="true"><rect x="8" y="8" width="12" height="12" fill="var(--ink)"></rect><g class="rough" fill="none" stroke-linecap="round"><path data-a="strike" d="M1 25 L27 3" stroke="var(--sand)" stroke-width="6"></path><path data-a="strike" d="M1 25 L27 3" stroke="var(--ink)" stroke-width="2.4"></path></g></svg><p>The model checking itself is the same model that made the plan. It describes its intent; it doesn't predict the result.</p></div>
+    <div class="srow" data-scene="strike"><svg viewBox="0 0 28 28" width="28" height="28" aria-hidden="true"><rect x="8" y="8" width="12" height="12" fill="var(--ink)"></rect><g class="rough" fill="none" stroke-linecap="round"><path data-a="strike" d="M1 25 L27 3" stroke="var(--sand)" stroke-width="6"></path><path data-a="strike" d="M1 25 L27 3" stroke="var(--ink)" stroke-width="2.4"></path></g></svg><p>Logs and monitoring tell you what happened. By then the database is gone.</p></div>
+  </div></div>
+  <p class="words" data-scene="words"><span data-w>Every</span> <span data-w>one</span> <span data-w>of</span> <span data-w>these</span> <span data-w>checks</span> <span data-w>what</span> <span data-w>an</span> <span data-w>action</span> <span class="mk strike"><span data-w>looks</span> <span data-w>like.</span><svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><path d="M1 6.5 C 18 4, 40 7.5, 62 5 S 90 3.5, 99 5.5"></path></svg></span> <span data-w>None</span> <span data-w>checks</span> <span data-w>what</span> <span data-w>it</span> <span class="mk under"><span data-w>will</span> <span data-w>do.</span><svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><path d="M1 4 C 22 7.5, 52 2.5, 99 5.5"></path></svg></span></p>
 </section>
 
-<!-- PROBLEM -->
-<section id="problem">
-  <div class="wrap">
-    <div class="eyebrow" data-r>The problem</div>
-    <h2 data-r>Permission isn't safety. <span class="a">Once it's done, it's done.</span></h2>
-    <p class="sub" data-r>An agent can be perfectly authorized to delete a customer, wire a payment, or make a repo public — and still do it at the wrong moment, tricked by a poisoned input or simply wrong. The action fires in milliseconds, before anyone reviews it. The one that hurts you is the one no rule anticipated.</p>
+<svg class="tun" data-tunnel viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><clipPath id="tc2"><rect data-clip x="-5" y="-20" width="110" height="140"></rect></clipPath><g clip-path="url(#tc2)"><path d="M72 0 C72 55, 28 45, 28 100" stroke="var(--ink)" stroke-width="22"></path><path d="M72 0 C72 55, 28 45, 28 100" stroke="var(--paper)" stroke-width="15"></path></g></svg>
 
-    <div class="statline">
-      <div class="bignum" data-count="88" data-suffix="%">0%</div>
-      <div class="statcap" data-r>
-        <p>of leaders report agent-driven incidents — despite feeling "covered."</p>
-        <div class="src">Source: State of AI Agent Security 2026 — survey of 900+ executives &amp; practitioners.</div>
-      </div>
-    </div>
-
-    <div class="cards3">
-      <div class="card" data-r>
-        <div class="t">Guardrails &amp; classifiers</div>
-        <h3>Pattern-match the past</h3>
-        <p>They match an action's text against known-bad rules — so they only catch what someone already thought to write down. The novel case walks straight through.</p>
-        <div class="x">✕ blind to what it hasn't seen</div>
-      </div>
-      <div class="card" data-r>
-        <div class="t">The model's own reasoning</div>
-        <h3>The fooled brain, judging itself</h3>
-        <p>The same model the attacker just hijacked decides whether it's safe. It produces words, not predictions of what will actually happen — and it's confident when it's wrong.</p>
-        <div class="x">✕ words, not guarantees</div>
-      </div>
-      <div class="card" data-r>
-        <div class="t">Monitoring &amp; observability</div>
-        <h3>Hindsight, after the damage</h3>
-        <p>It records what the action did — after it happened. A camera, not a brake. By the time you see the trace, the data has already left the building.</p>
-        <div class="x">✕ no prevention for irreversible acts</div>
-      </div>
-    </div>
-
-    <div class="kick" data-r>Every layer today checks what an action <span class="a">looks like</span>. None of them check what it <span class="a">will do</span>.</div>
-  </div>
+<section class="ch" id="how" aria-labelledby="how-h" data-ch><svg class="outline" aria-hidden="true"><rect class="rough" data-a="ol" width="100%" height="100%"></rect></svg>
+  <div class="head"><p class="kicker"><i></i><i></i>How it works</p><h2 class="h2" id="how-h" style="max-width:16ch">We check what an action will do, not what it looks like.</h2><p class="lead" style="max-width:56ch">Rabit sits between your agent and the tools it uses. Before a write runs, three things happen:</p></div>
+  <div class="how-desk" id="how-desk"><div class="how-stick">
+    <ol class="steps">
+      <li class="step" data-step="1"><span class="n">01</span><div><h3>Your agent asks first.</h3><p>One call from your agent (our SDK or a plain API call) sends Rabit the action it is about to take, for example "delete the secret PROD_DB_URL".</p></div></li>
+      <li class="step" data-step="2"><span class="n">02</span><div><h3>Rabit looks at your real setup and forecasts the result.</h3><p>It reads what exists and what depends on what, through read-only access. Then it forecasts what changes: what gets deleted, what breaks downstream, and whether it can be undone.</p></div></li>
+      <li class="step" data-step="3"><span class="n">03</span><div><h3>Rabit decides, and tells the agent why.</h3><p>A risky action is flagged for a person, with the forecast attached, or answered BLOCK with the reason. The agent gets the reason back, so it can change its plan.</p></div></li>
+    </ol>
+    <figure class="how-fig"><span class="tag">Example</span>
+      <svg class="how-svg" id="how-fig" viewBox="0 0 700 600" role="img" aria-label="Example. The agent sends delete the secret PROD_DB_URL to the gate where the rabbit sits. The rabbit looks down into the burrows of your system: PROD_DB_URL connects to the release workflow, which connects to the next release. Rabit stamps BLOCK and sends the reason back to the agent.">
+<g data-g="1">
+ <g class="rough" fill="none" stroke="var(--ink)" stroke-linecap="round" stroke-linejoin="round"><rect data-a="agent" x="20" y="64" width="130" height="56" rx="4" stroke-width="2.5"></rect><path data-a="line" d="M150 92 L462 92" stroke-width="3"></path><path data-a="bar" d="M470 30 L470 152" stroke-width="8"></path><path data-a="ground" d="M10 198 C 180 192, 420 203, 690 195" stroke-width="2.5"></path></g>
+ <text x="85" y="97" text-anchor="middle" letter-spacing="0.1em" fill="var(--ink)">AGENT</text>
+ <text data-a="barlabel" x="470" y="18" text-anchor="middle" letter-spacing="0.14em" fill="var(--ink)">RABIT</text>
+ <text data-a="actlabel" x="300" y="56" text-anchor="middle" paint-order="stroke" stroke="var(--paper)" stroke-width="6" fill="var(--ink)">delete the secret PROD_DB_URL</text>
+ <rect data-a="pixel" x="444" y="84" width="16" height="16" fill="var(--ink)"></rect>
+ <g data-a="rabbit" color="var(--ink)"><use href="#rb" x="484" y="58" width="92" height="94"></use><rect data-a="lid" class="lid" x="555.6" y="88.8" width="7.3" height="7.1"></rect></g>
+</g>
+<g data-g="2">
+ <path data-a="soil" d="M10 198 C 180 192, 420 203, 690 195 C 698 330, 690 470, 660 550 C 520 586, 200 588, 50 558 C 16 470, 6 330, 10 198 Z" fill="var(--sand)" class="rough"></path>
+ <g class="rough" fill="none" stroke-linecap="round" opacity=".45"><path data-a="faint" d="M528 290 C 570 312, 600 344, 608 384" stroke="var(--muted)" stroke-width="13"></path><path data-a="faint" d="M150 398 C 124 428, 112 466, 110 498" stroke="var(--muted)" stroke-width="13"></path></g>
+ <g fill="none" stroke-linecap="round" opacity=".45"><path data-a="faintIn" d="M528 290 C 570 312, 600 344, 608 384" stroke="var(--paper)" stroke-width="9"></path><path data-a="faintIn" d="M150 398 C 124 428, 112 466, 110 498" stroke="var(--paper)" stroke-width="9"></path></g>
+ <g class="rough" fill="var(--paper)" stroke="var(--muted)" stroke-width="1.8" opacity=".45"><ellipse data-a="faintCh" cx="614" cy="406" rx="46" ry="20"></ellipse><ellipse data-a="faintCh" cx="112" cy="520" rx="52" ry="20"></ellipse></g>
+ <g class="rough" fill="none" stroke="var(--ink)" stroke-linecap="round"><path data-a="tun" d="M530 200 C 530 224, 516 242, 500 258" stroke-width="15"></path><path data-a="tun" d="M418 300 C 380 340, 320 370, 276 380" stroke-width="15"></path><path data-a="tun" d="M240 404 C 270 450, 320 486, 366 498" stroke-width="15"></path></g>
+ <g fill="none" stroke="var(--paper)" stroke-linecap="round"><path data-a="tunIn" d="M530 200 C 530 224, 516 242, 500 258" stroke-width="10"></path><path data-a="tunIn" d="M418 300 C 380 340, 320 370, 276 380" stroke-width="10"></path><path data-a="tunIn" d="M240 404 C 270 450, 320 486, 366 498" stroke-width="10"></path></g>
+ <g class="rough" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.2"><ellipse data-a="ch" cx="470" cy="280" rx="62" ry="26"></ellipse><ellipse data-a="ch" cx="200" cy="380" rx="76" ry="28"></ellipse><ellipse data-a="ch" cx="440" cy="500" rx="74" ry="27"></ellipse></g>
+ <path data-a="probe" d="M530 156 C 530 214, 516 240, 486 268" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-dasharray="0.5 7" stroke-linecap="round"></path>
+ <defs><mask id="pm-desk" maskUnits="userSpaceOnUse" x="0" y="200" width="700" height="400"><path data-a="pulseMask" d="M470 280 L418 300 C 380 340, 320 370, 276 380 L200 380 L240 404 C 270 450, 320 486, 366 498 L440 500" stroke="#fff" stroke-width="24" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></mask></defs>
+ <path d="M470 280 L418 300 C 380 340, 320 370, 276 380 L200 380 L240 404 C 270 450, 320 486, 366 498 L440 500" fill="none" stroke="var(--ink)" stroke-width="3" stroke-dasharray="0.5 9" stroke-linecap="round" mask="url(#pm-desk)"></path>
+ <rect data-a="fA" x="462" y="272" width="16" height="16" fill="var(--ink)"></rect><rect data-a="fB" x="192" y="372" width="16" height="16" fill="var(--ink)"></rect><rect data-a="fC" x="432" y="492" width="16" height="16" fill="var(--rust)"></rect>
+ <text data-a="lA" x="544" y="285" paint-order="stroke" stroke="var(--sand)" stroke-width="7" fill="var(--ink)">PROD_DB_URL</text>
+ <text data-a="lB" x="200" y="337" text-anchor="middle" paint-order="stroke" stroke="var(--sand)" stroke-width="7" fill="var(--ink)">release workflow uses it</text>
+ <text data-a="lC" x="440" y="556" text-anchor="middle" paint-order="stroke" stroke="var(--sand)" stroke-width="7" fill="var(--ink)">next release breaks</text>
+</g>
+<g data-g="3">
+ <path data-a="ret" d="M462 128 L162 128" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round"></path>
+ <rect data-a="rpx" x="156" y="121" width="14" height="14" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.5"></rect>
+ <text data-a="reason" x="456" y="168" text-anchor="end" paint-order="stroke" stroke="var(--paper)" stroke-width="6" fill="var(--ink)">Deleting it breaks the next release.</text>
+ <g transform="rotate(-6 640 88)"><g data-a="stamp"><rect x="588" y="68" width="104" height="40" fill="var(--rust)"></rect><text x="640" y="95" text-anchor="middle" font-size="18" font-weight="600" letter-spacing="0.14em" fill="#EEEEE6">BLOCK</text></g></g>
+</g>
+      </svg>
+    </figure>
+  </div></div>
+  <p class="how-after">The same DELETE can be routine in one company and a disaster in another. Rules can't tell them apart. A forecast of your system can.</p>
 </section>
 
-<!-- HOW IT WORKS -->
-<section id="how">
-  <div class="wrap">
-    <div class="eyebrow" data-r>How Rabit works</div>
-    <h2 data-r>We reason about what an action <span class="a">will do</span> — not what it looks like.</h2>
-    <p class="sub" data-r>Consequence-aware by design — a learned world model that predicts an action's effect before it runs.</p>
+<svg class="tun" data-tunnel viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><clipPath id="tc3"><rect data-clip x="-5" y="-20" width="110" height="140"></rect></clipPath><g clip-path="url(#tc3)"><path d="M28 0 C28 55, 72 45, 72 100" stroke="var(--ink)" stroke-width="22"></path><path d="M28 0 C28 55, 72 45, 72 100" stroke="var(--paper)" stroke-width="15"></path></g></svg>
 
-    <div class="step">
-      <div class="copy">
-        <div class="num" data-r>01</div>
-        <h3 data-r>Predict the resulting state.</h3>
-        <p class="p" data-r>A learned world model reads the live state and the action the agent proposes, and predicts the state it would produce — before it runs. <b>Reversible or not, and how far it reaches</b>, fall straight out.</p>
-        <div class="tag" data-r>world model core · predictor v1 in build</div>
-      </div>
-      <div class="viz" data-r>
-        <div class="lab">Input</div>
-        <div class="in">current state <b>+</b> proposed action &nbsp;·&nbsp; <b>DELETE /customers/4471</b></div>
-        <div class="arw">↓</div>
-        <div class="model"><div class="f">f(state, action)</div><div class="m">predicts the resulting state · advisory</div></div>
-        <div class="arw">↓</div>
-        <div class="pred">
-          <div class="r"><span class="k">reversibility</span><span class="irr">IRREVERSIBLE</span></div>
-          <div class="r"><span class="k">blast radius</span><span style="color:var(--lead)">3 open invoices · $8,400 ARR</span></div>
-          <div class="r"><span class="k">confidence</span><span><span class="meter"><i></i></span>0.93 → <span class="hold">HOLD</span></span></div>
+<section class="ch" aria-labelledby="see-h" data-ch id="see"><svg class="outline" aria-hidden="true"><rect class="rough" data-a="ol" width="100%" height="100%"></rect></svg>
+  <div class="head"><p class="kicker"><i></i><i></i>What you see</p><h2 class="h2" id="see-h" style="max-width:15ch">A clear answer for every action, and proof of it.</h2></div>
+  <div class="see-grid">
+    <div class="see-left">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span class="rl-k">Example · pick an action and watch Rabit answer</span>
+        <div class="ex-tabs" role="tablist" aria-label="Example actions">
+          <button type="button" role="tab" id="ex-0" aria-selected="true" tabindex="0" aria-controls="receipt">delete the secret PROD_DB_URL</button>
+          <button type="button" role="tab" id="ex-1" aria-selected="false" tabindex="-1" aria-controls="receipt">delete the secret LEGACY_EXPORT_KEY</button>
         </div>
       </div>
-    </div>
-
-    <div class="step">
-      <div class="copy">
-        <div class="num" data-r>02</div>
-        <h3 data-r>Route on the prediction.</h3>
-        <p class="p" data-r>A fixed rule acts on that prediction: irreversible or high-impact waits for a human, catastrophic is stopped, and the routine <b>95%</b> flows untouched.</p>
-        <div class="fine" data-r>The prediction is advisory — it decides what a human reviews. Hard blocking stays deterministic, and never fails open.</div>
-      </div>
-      <div class="rts" data-r>
-        <div class="rt a"><span class="dot"></span><span class="v">ALLOW</span><span class="d">post_internal_note — flows, no friction</span></div>
-        <div class="rt h"><span class="dot"></span><span class="v">HOLD</span><span class="d">delete_customer — irreversible, waits for a human</span></div>
-        <div class="rt b"><span class="dot"></span><span class="v">BLOCK</span><span class="d">export_db — unknown host, connection never opens</span></div>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="copy">
-        <div class="num" data-r>03</div>
-        <h3 data-r>It teaches itself. It compounds.</h3>
-        <p class="p" data-r>It learns from consequences it generates for itself: rehearse an action in a sandbox, diff the world before and after — <b>that diff is a free, ground-truth label</b>. Sharper with every action; a rulebook isn't.</p>
-        <div class="fine" data-r>Trust envelope: code, files, databases and git sandbox faithfully — trusted prediction. Money and external sends can't — those default to a human.</div>
-      </div>
-      <div class="viz loop" data-r>
-        <div class="li"><span class="n">01</span><span class="lt"><b>Sandbox rehearsal</b> — run the proposed action in a secure, isolated copy of the system.</span></div>
-        <div class="li"><span class="n">02</span><span class="lt"><b>State diffing</b> — compare before and after; the diff is the ground-truth consequence.</span></div>
-        <div class="li"><span class="n">03</span><span class="lt"><b>Model update</b> — the world model's dynamics core learns, with zero human labels.</span></div>
-      </div>
-    </div>
-
-    <div class="kick" data-r>The moat is the data: a <span class="a">consequence-label stream from sandbox simulations</span> that compounds with every action Rabit sees.</div>
-  </div>
-</section>
-
-<!-- VISION -->
-<section id="approach">
-  <div class="wrap">
-    <div class="eyebrow" data-r>Our vision</div>
-    <h2 data-r>AI is moving from words, to actions, to <span class="a">the physical world</span>.</h2>
-    <p class="sub" data-r>Every step in that arc needs a layer that understands consequences — one that knows what an action will do before it happens. We're building that layer: the control plane between an agent's intent and its effect on the world.</p>
-    <div class="vcols" data-r>
-      <div class="vcol">
-        <div class="vlab">Software · today</div>
-        <p>Financial services, insurance, customer support, code &amp; DevOps — agents already writing to production.</p>
-      </div>
-      <div class="vcol next">
-        <div class="vlab">Physical · next</div>
-        <p>Mobility, robotics, industrial systems, medical devices — where a wrong action can't be undone at all.</p>
-      </div>
-    </div>
-    <div class="kick" data-r>The same primitive — <span class="a">predict the consequence, before the action</span> — governs a database write today and a robot's motion tomorrow.</div>
-  </div>
-</section>
-
-<!-- FOUNDER + DESIGN PARTNERS -->
-<section id="partners">
-  <div class="wrap">
-    <div class="eyebrow" data-r>Who's building this</div>
-    <h2 data-r>Early, opinionated, and <span class="a">built in the open</span>.</h2>
-    <div class="founder solo" data-r>
-      <div class="who">
-        <div class="avatar">AS</div>
-        <div>
-          <div class="nm">Adam Shibli</div>
-          <div class="rl">Founder</div>
+      <div class="receipt" id="receipt" role="tabpanel" aria-labelledby="ex-0" data-scene="receipt">
+        <div class="rbody">
+          <div class="rtop"><span class="tag">Example</span><i></i></div>
+          <span class="rl-k" data-a="rl">Your agent wants to</span>
+          <span class="rl-v big" data-a="rl" data-r="action">delete the secret PROD_DB_URL</span>
+          <span class="dash"></span>
+          <span class="rl-k" data-a="rl">Rabit</span>
+          <span class="chip block" data-a="chip" data-r="verdict">BLOCK</span>
+          <span class="rl-k gap" data-a="rl">Why</span>
+          <span class="rl-v" data-a="rl" data-r="why" style="text-wrap:pretty">your release workflow uses a secret by this name on every deploy. Deleting it breaks the next release.</span>
+          <span class="rl-k gap" data-a="rl">Receipt</span>
+          <span class="rl-v" data-a="rl">signed, 29 Oct 2026, 14:02</span>
         </div>
+        <svg class="zig" viewBox="0 0 400 14" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0 H400 V6 L392 12 L381 5 L372 13 L361 6 L349 11 L338 4 L328 12 L316 6 L305 13 L294 5 L283 11 L271 6 L260 13 L249 4 L238 12 L226 7 L215 13 L204 5 L193 11 L181 6 L170 13 L159 5 L148 12 L136 6 L125 13 L114 4 L103 11 L91 6 L80 13 L69 5 L58 12 L46 6 L35 13 L24 5 L13 11 L0 6 Z" fill="var(--paper)"></path></svg>
       </div>
-      <p class="fbio">I'm building Rabit — the consequence layer for AI agents. It's in active build, and I'd rather build it with a few real teams than in a vacuum.</p>
-      <div class="socials">
-        <a class="slink" href="https://www.linkedin.com/in/adam-shibli/" target="_blank" rel="noopener">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
-          LinkedIn
-        </a>
-      </div>
+    </div>
+    <div class="see-right">
+      <div><h3>Review or block, never a silent pass.</h3><p>Every action that reaches Rabit gets one of two answers: REVIEW, meaning a person should decide with the forecast in front of them, or BLOCK, with the reason. When Rabit isn't sure, it answers REVIEW.</p></div>
+      <div><h3>A signed receipt for every decision.</h3><p>Each answer is signed with a key held in AWS KMS, so you can show an auditor, a customer or your own team exactly what was decided, when, and why. You can check a receipt yourself; you don't have to take our word for it.</p></div>
     </div>
   </div>
 </section>
 
-<!-- FINAL CTA -->
-<section id="contact">
-  <div class="wrap">
-    <div class="final" data-r>
-      <div class="eyebrow">Get in touch</div>
-      <h2>Give your agents <span class="a">foresight</span>.</h2>
-      <p class="sub">Rabit is in active build, and we're working with a small group of design partners running agents in production. Tell me what your agents touch — I'll show you where we are and get you access as it's ready.</p>
-      <form class="intake" id="intake-form" action="https://formspree.io/f/mvzwznak" method="POST">
-        <input type="hidden" name="_subject" value="Rabit — early access request">
-        <div class="row2">
-          <div class="fld"><label for="if-name">Name</label><input id="if-name" name="name" type="text" required placeholder="Jane Doe"></div>
-          <div class="fld"><label for="if-email">Work email</label><input id="if-email" name="email" type="email" required placeholder="jane@company.com"></div>
-        </div>
-        <div class="fld"><label for="if-co">Company</label><input id="if-co" name="company" type="text" placeholder="Acme Platform"></div>
-        <div class="fld"><label for="if-msg">What are your agents doing in production today?</label><textarea id="if-msg" name="message" rows="3" placeholder="A sentence or two is plenty."></textarea></div>
-        <button type="submit" class="btn btn-solid intake-submit">Request access</button>
-        <div class="intake-note" id="intake-note" hidden>Thanks — I'll be in touch shortly.</div>
-      </form>
-      <div class="intake-alt">Prefer email? <a href="mailto:adam.shibli2001@gmail.com?subject=Rabit%20%E2%80%94%20early%20access">adam.shibli2001@gmail.com</a></div>
+<svg class="tun" data-tunnel viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><clipPath id="tc4"><rect data-clip x="-5" y="-20" width="110" height="140"></rect></clipPath><g clip-path="url(#tc4)"><path d="M72 0 C72 55, 28 45, 28 100" stroke="var(--ink)" stroke-width="22"></path><path d="M72 0 C72 55, 28 45, 28 100" stroke="var(--paper)" stroke-width="15"></path></g></svg>
+
+<section class="ch" aria-labelledby="who-h" data-ch><svg class="outline" aria-hidden="true"><rect class="rough" data-a="ol" width="100%" height="100%"></rect></svg>
+  <div class="head"><p class="kicker"><i></i><i></i>Who it's for</p><h2 class="h2" id="who-h" style="max-width:17ch">Built for the team that gets paged when an agent gets it wrong.</h2></div>
+  <div class="who-grid">
+    <div class="who" data-scene="who"><svg viewBox="0 0 220 90" aria-hidden="true"><g class="rough" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect data-a="d" x="6" y="30" width="46" height="30" rx="4"></rect><path data-a="d" d="M52 45 H86"></path><rect data-a="d" x="86" y="30" width="46" height="30" rx="4"></rect><path data-a="d" d="M132 45 H166"></path><rect data-a="d" x="166" y="30" width="46" height="30" rx="4"></rect></g><rect data-a="px" x="183" y="39" width="12" height="12" fill="var(--ink)"></rect></svg><p><b>Platform and DevOps teams letting agents touch AWS or GitHub: secrets, workflows, deploys.</b>You want the speed without the 2 a.m. rollback.</p></div>
+    <div class="who" data-scene="who"><svg viewBox="0 0 220 90" aria-hidden="true"><g class="rough" fill="none" stroke="var(--ink)" stroke-linecap="round" stroke-linejoin="round"><rect data-a="d" x="92" y="2" width="36" height="20" rx="3" stroke-width="2.2"></rect><path data-a="d" d="M110 22 V36" stroke-width="2.2"></path><path data-a="d" d="M4 38 C60 34 160 40 216 36" stroke-width="2.2"></path><ellipse data-a="d" cx="110" cy="58" rx="20" ry="9" stroke-width="2"></ellipse><path data-a="d" d="M92 62 C70 70 52 72 40 80" stroke-width="2"></path><path data-a="d" d="M129 62 C150 70 170 72 182 80" stroke-width="2"></path><ellipse data-a="d" cx="32" cy="82" rx="16" ry="7" stroke-width="2"></ellipse><ellipse data-a="d" cx="190" cy="82" rx="16" ry="7" stroke-width="2"></ellipse></g><rect data-a="px" x="104" y="52" width="12" height="12" fill="var(--ink)"></rect><rect data-a="px" x="185" y="77" width="9" height="9" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"></rect></svg><p><b>Companies building agents for their customers.</b>Your customers ask what stops your agent from breaking their systems. Rabit gives you an answer, and a receipt for each decision.</p></div>
+    <div class="who" data-scene="who"><svg viewBox="0 0 220 90" aria-hidden="true"><g class="rough" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path data-a="d" d="M16 50 L26 60 M26 50 L16 60"></path><path data-a="d" d="M40 56 C50 22 58 64 70 40 S88 18 96 50 S118 28 132 46 S152 38 172 30"></path><path data-a="d" d="M12 72 H200"></path></g><rect data-a="px" x="196" y="66" width="12" height="12" fill="var(--ink)"></rect></svg><p><b>Security and engineering leads who have to sign off on agent access.</b>You get a record of what agents tried to do, and why Rabit answered REVIEW or BLOCK for each one.</p></div>
+  </div>
+  <p class="cover">Today Rabit covers agents that act on GitHub and AWS Secrets Manager. If your agents act somewhere else, tell us on the call. That's how we choose what comes next.</p>
+</section>
+
+<svg class="tun" data-tunnel viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><clipPath id="tc5"><rect data-clip x="-5" y="-20" width="110" height="140"></rect></clipPath><g clip-path="url(#tc5)"><path d="M28 0 C28 55, 72 45, 72 100" stroke="var(--ink)" stroke-width="22"></path><path d="M28 0 C28 55, 72 45, 72 100" stroke="var(--paper)" stroke-width="15"></path></g></svg>
+
+<section class="ch" id="pilot" aria-labelledby="pilot-h" data-ch><svg class="outline" aria-hidden="true"><rect class="rough" data-a="ol" width="100%" height="100%"></rect></svg>
+  <div class="head"><p class="kicker"><i></i><i></i>The pilot</p><h2 class="h2" id="pilot-h" style="max-width:16ch">Start in shadow mode. Nothing in your production changes.</h2></div>
+  <ol class="track" id="track">
+    <li class="rail" aria-hidden="true"></li>
+    <li class="pstep"><span class="pm" aria-hidden="true"></span><span class="n">01</span><h3>A 30-minute call.</h3><p>You show us the agent and the actions that worry you. We tell you honestly whether Rabit fits.</p></li>
+    <li class="pstep"><span class="pm" aria-hidden="true"></span><span class="n">02</span><h3>A light install.</h3><p>One package in your agent, wrapped around its write tools, plus read-only access we set up with you. For AWS it can list and describe your secrets, and it can never read a secret's value.</p></li>
+    <li class="pstep"><span class="pm" aria-hidden="true"></span><span class="n">03</span><h3>Shadow mode.</h3><p>Your agent keeps working as it does today. Rabit forecasts and decides on every write before it runs, then lets it through, and you see what each action would have caused, with a verdict and a receipt.</p></li>
+    <li class="pstep"><span class="pm" aria-hidden="true"></span><span class="n">04</span><h3>Week one, a real list.</h3><p>What your agents were about to do, which actions Rabit would have stopped, and why. Something you can forward to your manager.</p></li>
+  </ol>
+  <div class="price"><p>Shadow mode is free while we set it up together. If it earns its place, the pilot is a flat monthly fee: no per-seat counting, no long contract.</p><a class="btn" href="https://calendar.app.google/LaUmrqoYwzVWfSuW7" target="_blank" rel="noopener">Book a call</a></div>
+</section>
+
+<svg class="tun" data-tunnel viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><clipPath id="tc6"><rect data-clip x="-5" y="-20" width="110" height="140"></rect></clipPath><g clip-path="url(#tc6)"><path d="M72 0 C72 55, 28 45, 28 100" stroke="var(--ink)" stroke-width="22"></path><path d="M72 0 C72 55, 28 45, 28 100" stroke="var(--paper)" stroke-width="15"></path></g></svg>
+
+<section class="ch" aria-labelledby="talk-h" data-ch><svg class="outline" aria-hidden="true"><rect class="rough" data-a="ol" width="100%" height="100%"></rect></svg>
+  <div class="head"><p class="kicker"><i></i><i></i>Straight talk</p><h2 class="h2" id="talk-h">Where we are, honestly.</h2></div>
+  <div class="ledger">
+    <div><h3>What Rabit does today</h3>
+      <div class="lrow"><i></i><p>Checks an agent's write actions before they run, on GitHub and AWS Secrets Manager</p></div>
+      <div class="lrow"><i></i><p>Forecasts the result from read-only access to your setup</p></div>
+      <div class="lrow"><i></i><p>Flags a risky action for a person, with the forecast, or answers BLOCK with the reason</p></div>
+      <div class="lrow"><i></i><p>Signs a receipt for every decision with a key in AWS KMS</p></div>
     </div>
+    <div class="not"><h3>What it doesn't do yet</h3>
+      <div class="lrow"><i></i><p>Approve actions on its own. In the pilot every answer is REVIEW or BLOCK</p></div>
+      <div class="lrow"><i></i><p>Promise it is always right. A forecast can be wrong, which is why risky actions are flagged for a person</p></div>
+      <div class="lrow"><i></i><p>Give you an accuracy number. We haven't measured one yet, and we'll measure it with you before we print one</p></div>
+      <div class="lrow"><i></i><p>Cover every system. AWS and GitHub first, then what our pilot partners need</p></div>
+    </div>
+  </div>
+  <div class="founder"><p>Rabit is founder-led and taking a few pilot partners, so you work with the founder directly. If that suits you, let's talk.</p><span>Adam Shibli, founder · <a href="https://www.linkedin.com/in/adam-shibli/" target="_blank" rel="noopener">LinkedIn</a></span></div>
+</section>
+
+<svg class="tun" data-tunnel viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><clipPath id="tc7"><rect data-clip x="-5" y="-20" width="110" height="140"></rect></clipPath><g clip-path="url(#tc7)"><path d="M28 0 C28 55, 72 45, 72 100" stroke="var(--ink)" stroke-width="22"></path><path d="M28 0 C28 55, 72 45, 72 100" stroke="var(--paper)" stroke-width="15"></path></g></svg>
+
+<section class="ch" id="faq" aria-labelledby="faq-h" data-ch style="gap:clamp(30px,4vw,48px)"><svg class="outline" aria-hidden="true"><rect class="rough" data-a="ol" width="100%" height="100%"></rect></svg>
+  <h2 class="h2" id="faq-h">FAQ</h2>
+  <div class="faq">
+    <div class="faq-col"><div class="qa open"><button type="button" id="qb-0" aria-expanded="true" aria-controls="qa-0"><span class="q">Where does Rabit sit? Is it an MCP server?</span><span class="pm-ico" aria-hidden="true"><i></i><i></i></span></button><div class="a" id="qa-0" role="region" aria-labelledby="qb-0" aria-hidden="false"><div><p>Between your agent and the tools it uses. You can add it through our SDK or with one API call. An MCP server, or a gateway for agents on a hosted platform, is built with the pilot partner who needs one.</p></div></div></div><div class="qa"><button type="button" id="qb-1" aria-expanded="false" aria-controls="qa-1"><span class="q">Does Rabit read our secrets?</span><span class="pm-ico" aria-hidden="true"><i></i><i></i></span></button><div class="a" id="qa-1" role="region" aria-labelledby="qb-1" aria-hidden="true"><div><p>No. The AWS access you give us can list and describe your secrets. It can't read a secret's value.</p></div></div></div><div class="qa"><button type="button" id="qb-2" aria-expanded="false" aria-controls="qa-2"><span class="q">Does it slow my agent down?</span><span class="pm-ico" aria-hidden="true"><i></i><i></i></span></button><div class="a" id="qa-2" role="region" aria-labelledby="qb-2" aria-hidden="true"><div><p>Only write actions wait, for one check that takes several seconds today. Reads don't wait.</p></div></div></div><div class="qa"><button type="button" id="qb-3" aria-expanded="false" aria-controls="qa-3"><span class="q">What if Rabit isn't sure, or can't answer?</span><span class="pm-ico" aria-hidden="true"><i></i><i></i></span></button><div class="a" id="qa-3" role="region" aria-labelledby="qb-3" aria-hidden="true"><div><p>It answers REVIEW, so a person looks. Unsure never means pass.</p></div></div></div></div>
+    <div class="faq-col"><div class="qa"><button type="button" id="qb-4" aria-expanded="false" aria-controls="qa-4"><span class="q">Isn't this just another guardrail?</span><span class="pm-ico" aria-hidden="true"><i></i><i></i></span></button><div class="a" id="qa-4" role="region" aria-labelledby="qb-4" aria-hidden="true"><div><p>A guardrail judges how a request looks. Rabit forecasts what it will do in your systems. The same command can get two different answers in two companies, because it would break different things.</p></div></div></div><div class="qa"><button type="button" id="qb-5" aria-expanded="false" aria-controls="qa-5"><span class="q">Can the forecast be wrong?</span><span class="pm-ico" aria-hidden="true"><i></i><i></i></span></button><div class="a" id="qa-5" role="region" aria-labelledby="qb-5" aria-hidden="true"><div><p>Yes. That's why we ask it a narrow question (can this be undone, and what else does it touch), why a risky answer is flagged for a person, and why a forecast can only make a decision stricter, never looser.</p></div></div></div><div class="qa"><button type="button" id="qb-6" aria-expanded="false" aria-controls="qa-6"><span class="q">What does it run on?</span><span class="pm-ico" aria-hidden="true"><i></i><i></i></span></button><div class="a" id="qa-6" role="region" aria-labelledby="qb-6" aria-hidden="true"><div><p>Forecasts run on Amazon Bedrock (Amazon Nova models). Receipts are signed with AWS KMS.</p></div></div></div><div class="qa"><button type="button" id="qb-7" aria-expanded="false" aria-controls="qa-7"><span class="q">What does it cost?</span><span class="pm-ico" aria-hidden="true"><i></i><i></i></span></button><div class="a" id="qa-7" role="region" aria-labelledby="qb-7" aria-hidden="true"><div><p>Shadow mode is free while we set it up together. After that, the pilot is a flat monthly fee.</p></div></div></div></div>
   </div>
 </section>
 
-<footer>
-  <div class="fl">© 2026 Rabit · <a href="mailto:adam.shibli2001@gmail.com">Adam Shibli</a></div>
-  <div class="tg">We predict what an action will do — <b>before it runs.</b></div>
+<svg class="tun" data-tunnel viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><clipPath id="tc8"><rect data-clip x="-5" y="-20" width="110" height="140"></rect></clipPath><g clip-path="url(#tc8)"><path d="M72 0 C72 55, 28 45, 28 100" stroke="var(--ink)" stroke-width="22"></path><path d="M72 0 C72 55, 28 45, 28 100" stroke="var(--paper)" stroke-width="15"></path></g></svg>
+
+<section class="ch night" aria-labelledby="close-h" data-ch data-scene="nest" id="nest"><svg class="outline" aria-hidden="true"><rect class="rough" data-a="ol" width="100%" height="100%"></rect></svg>
+  <div class="nest-grid">
+    <div>
+      <p class="kicker" style="color:#B4B4A6"><i style="background:var(--paper)"></i><i style="background:var(--paper)"></i>The nest</p>
+      <h2 class="close-h" id="close-h">Show us the action that keeps you up at night<span class="stop"><span class="sr">.</span></span></h2>
+      <p class="lead" style="max-width:52ch">Thirty minutes, with the founder. Bring one agent and the one thing you'd never want it to do on its own. We'll show you what Rabit would have said, and tell you straight if it isn't a fit.</p>
+      <a class="btn" href="https://calendar.app.google/LaUmrqoYwzVWfSuW7" target="_blank" rel="noopener">Book a call <span class="ar" aria-hidden="true">→</span></a>
+      <p class="write">Rather write? <a href="mailto:adam.shibli2001@gmail.com">adam.shibli2001@gmail.com</a></p>
+    </div>
+    <svg class="sleeper" viewBox="0 0 260 180" aria-hidden="true">
+      <g data-a="zz" fill="var(--paper)"><rect x="196" y="78" width="6" height="6"></rect><rect x="206" y="62" width="8" height="8"></rect><rect x="218" y="42" width="10" height="10"></rect></g>
+      <ellipse cx="130" cy="152" rx="112" ry="24" fill="var(--ink)" stroke="var(--paper)" stroke-width="2.2" class="rough"></ellipse>
+      <g color="var(--paper)"><use href="#rb" x="72" y="56" width="104" height="106"></use><rect data-a="slid" class="lid sleep" x="152.5" y="90.5" width="9.2" height="8.9" style="fill:var(--paper)"></rect></g>
+    </svg>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-top">
+    <a class="foot-brand" href="#top" aria-label="Rabit, back to top" data-blink><svg viewBox="0 0 700 713" aria-hidden="true"><use href="#rb"></use><rect class="lid sleep" x="545" y="234" width="55" height="53"></rect></svg><span>RABIT</span></a>
+    <nav class="foot-nav" aria-label="Footer"><a href="#how">How it works</a><a href="#pilot">Pilot</a><a href="#faq">FAQ</a><a href="https://calendar.app.google/LaUmrqoYwzVWfSuW7" target="_blank" rel="noopener">Book a call</a></nav>
+  </div>
+  <div class="foot-base"><span>© 2026 Rabit</span><span>·</span><span>See the consequence before the action.</span><span>·</span><a href="https://www.linkedin.com/in/adam-shibli/" target="_blank" rel="noopener">LinkedIn</a><span>·</span><a href="mailto:adam.shibli2001@gmail.com">Contact</a></div>
 </footer>
+</main>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<aside class="ticket" id="ticket" aria-hidden="true" data-stage="0">
+  <div style="display:flex;justify-content:space-between;align-items:center"><span class="tag" style="font-size:9.5px">Example</span><i style="width:8px;height:8px;background:var(--ink);display:block"></i></div>
+  <span class="k">Your agent wants to</span><span>delete the secret PROD_DB_URL</span>
+  <span class="k">Rabit</span><span class="wait s2 dots"></span><span class="wait s3 chip block" style="font-size:11px;padding:3px 10px">BLOCK</span>
+  <span class="k wait s3">Why</span><span class="wait s3">your release workflow uses a secret by this name on every deploy. Deleting it breaks the next release.</span>
+</aside>
 <script>
-(function(){
-  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+(function () {
+  "use strict";
+  var root = document.documentElement;
+  var still = root.classList.contains("still");
+  var canAnimate = !!Element.prototype.animate;
+  function $(s, r) { return (r || document).querySelector(s); }
+  function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  var SOFT = "cubic-bezier(.22,.61,.36,1)", INK = "cubic-bezier(.5,0,.2,1)", STAMP = "cubic-bezier(.2,.9,.3,1)";
 
-  /* hero point-cloud — luminous grayscale sphere (canvas 2D, additive) */
-  var cv=document.getElementById('orb'), heroVisible=true;
-  if(cv){
-    var ctx=cv.getContext('2d'), DPR=Math.min(devicePixelRatio||1,2), W,H;
-    function size(){W=cv.width=Math.round(innerWidth*DPR);H=cv.height=Math.round(innerHeight*DPR);cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';}
-    size(); addEventListener('resize',size,{passive:true});
+  function mk(L, el, kf, d, delay, e) { if (!el || !canAnimate) return null; var a = el.animate(kf, { duration: d, delay: delay || 0, easing: e || SOFT, fill: "backwards" }); a.pause(); L.push(a); return a; }
+  function box(el, o) { if (el) { el.style.transformBox = "fill-box"; el.style.transformOrigin = o || "50% 50%"; } return el; }
+  function draw(L, el, d, delay, e) { if (!el || !el.getTotalLength || !canAnimate) return; var n = el.getTotalLength(); el.style.strokeDasharray = n + " " + (n + 4); var a = mk(L, el, [{ strokeDashoffset: n + 2 }, { strokeDashoffset: 0 }], d, delay, e || INK); if (a) a.addEventListener("finish", function () { el.style.strokeDasharray = ""; }); }
+  function fade(L, el, d, delay, dy) { dy = dy == null ? 6 : dy; mk(L, el, [{ opacity: 0, transform: "translateY(" + dy + "px)" }, { opacity: 1, transform: "translateY(0)" }], d, delay); }
+  function pop(L, el, delay, d) { return mk(L, box(el), [{ opacity: 0, transform: "scale(.2)" }, { opacity: 1, transform: "scale(1)" }], d || 340, delay, STAMP); }
+  function stamp(L, el, delay) { return mk(L, box(el), [{ opacity: 0, transform: "scale(1.7)" }, { opacity: 1, transform: "scale(.95)", offset: .72 }, { opacity: 1, transform: "scale(1)" }], 460, delay, STAMP); }
+  function openEye(L, lid, delay) { return mk(L, box(lid, "50% 0"), [{ transform: "scaleY(1)" }, { transform: "scaleY(1)", offset: .5 }, { transform: "scaleY(0)" }], 360, delay, "ease-out"); }
+  function thump(L, el, delay) { return mk(L, box(el, "50% 100%"), [{ transform: "translateY(0)" }, { transform: "translateY(-7px)", offset: .22 }, { transform: "translateY(0)", offset: .44 }, { transform: "translateY(-3px)", offset: .64 }, { transform: "translateY(0)" }], 560, delay, "ease-out"); }
+  function blink(lid) { if (lid && canAnimate && !still) lid.animate([{ transform: "scaleY(0)" }, { transform: "scaleY(1)", offset: .45 }, { transform: "scaleY(1)", offset: .6 }, { transform: "scaleY(0)" }], { duration: 280, easing: "ease-in-out" }); }
+  function hops(L, el, from, arcs, d, delay) { var kf = []; for (var i = 0; i <= arcs * 2; i++) { var t = i / (arcs * 2), x = from * (1 - t), lift = (i % 2) ? -30 : 0; kf.push({ transform: "translate(" + (-x) + "px," + lift + "px)", opacity: 1, offset: t, easing: (i % 2) ? "cubic-bezier(.3,0,.6,1)" : "cubic-bezier(.4,0,.7,.4)" }); } kf[0].opacity = 0; mk(L, el, kf, d, delay, "linear"); }
 
-    var N=innerWidth<820?1300:2400, pts=new Float32Array(N*3), ph=new Float32Array(N), gr=Math.PI*(3-Math.sqrt(5));
-    for(var i=0;i<N;i++){
-      var y=1-(i/(N-1))*2, rr=Math.sqrt(Math.max(0,1-y*y)), th=gr*i;
-      pts[i*3]=Math.cos(th)*rr; pts[i*3+1]=y; pts[i*3+2]=Math.sin(th)*rr;
-      ph[i]=Math.random()*6.283;
-    }
+  var pg = $("#main"), runner = $("#runner"), hero = $("#top"), card = $("#card"), howDesk = $("#how-desk"), fig = $("#how-fig"),
+      see = $("#see"), receipt = $("#receipt"), track = $("#track"), ticket = $("#ticket"), nest = $("#nest");
 
-    var tx=0,ty=0,mx=0,my=0;
-    addEventListener('pointermove',function(e){tx=e.clientX/innerWidth-0.5; ty=e.clientY/innerHeight-0.5;},{passive:true});
+  $$("[data-blink]").forEach(function (a) { var lid = $(".lid", a); var f = function () { if (!lid || !canAnimate || still) return; if (lid.classList.contains("sleep")) lid.animate([{ transform: "scaleY(1)" }, { transform: "scaleY(0)", offset: .25 }, { transform: "scaleY(0)", offset: .7 }, { transform: "scaleY(1)" }], { duration: 1100, easing: "ease-in-out" }); else blink(lid); }; a.addEventListener("mouseenter", f); a.addEventListener("focus", f); });
 
-    var t=0;
-    function draw(){
-      t+=0.0015; mx+=(tx-mx)*0.035; my+=(ty-my)*0.035;
-      ctx.clearRect(0,0,W,H);
-      ctx.globalCompositeOperation='lighter';
-      var cx=W/2, cy=H*0.43, baseR=Math.min(W,H)*0.27;
-      var ry=t+mx*0.5, rx=Math.sin(t*0.45)*0.16+my*0.42;
-      var cY=Math.cos(ry),sY=Math.sin(ry),cX=Math.cos(rx),sX=Math.sin(rx);
-      var breathe=1+0.016*Math.sin(t*0.85);
-      for(var i=0;i<N;i++){
-        var x=pts[i*3],y=pts[i*3+1],z=pts[i*3+2];
-        var m=(1+0.028*Math.sin(t*1.05+x*2.6+y*1.7))*breathe;
-        x*=m; y*=m; z*=m;
-        var x1=x*cY-z*sY, z1=x*sY+z*cY;
-        var y1=y*cX-z1*sX, z2=y*sX+z1*cX;
-        var persp=2.0/(2.0+z2);
-        var sx=cx+x1*baseR*persp, sy=cy+y1*baseR*persp;
-        var depth=(z2+1)*0.5;
-        var tw=0.90+0.14*Math.sin(t*2.0+ph[i]);
-        var rad=(0.5+depth*1.8)*DPR;
-        var al=(0.06+depth*0.6)*tw;
-        var g=(152+depth*103)|0;
-        ctx.fillStyle='rgba('+g+','+g+','+(g+6)+','+al+')';
-        ctx.beginPath(); ctx.arc(sx,sy,rad,0,6.283); ctx.fill();
-      }
-      ctx.globalCompositeOperation='source-over';
-    }
-    function loop(){ if(heroVisible) draw(); requestAnimationFrame(loop); }
-    draw();
-    if(!reduced) requestAnimationFrame(loop);
-  }
-
-  if(window.gsap && window.ScrollTrigger){
-    gsap.registerPlugin(ScrollTrigger);
-
-    gsap.to('#progress',{width:'100%',ease:'none',scrollTrigger:{trigger:document.body,start:'top top',end:'bottom bottom',scrub:.3}});
-    ScrollTrigger.create({start:40,onUpdate:function(s){document.getElementById('nav').classList.toggle('scrolled',s.scroll()>40);}});
-
-    // hero content in
-    if(!reduced){
-      gsap.from('#hero [data-r]',{opacity:0,y:26,duration:.95,stagger:.09,ease:'power3.out',delay:.15});
-    }
-    // fade hero content, point-cloud + glow out as we leave the hero, and pause the RAF work
-    gsap.to('#hero .hero-inner',{opacity:.06,y:-32,ease:'none',scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom 45%',scrub:true}});
-    gsap.to(['#orb','#coreglow'],{opacity:0,ease:'none',scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom 42%',scrub:true}});
-    gsap.to('.scrollhint',{opacity:0,ease:'none',scrollTrigger:{trigger:'#hero',start:'top top',end:'14% top',scrub:true}});
-    ScrollTrigger.create({trigger:'#hero',start:'bottom 42%',onEnter:function(){heroVisible=false;},onLeaveBack:function(){heroVisible=true;}});
-
-    // reveals
-    if(!reduced){
-      gsap.utils.toArray('section:not(#hero) [data-r]').forEach(function(el){
-        gsap.from(el,{opacity:0,y:26,duration:.8,ease:'power3.out',
-          scrollTrigger:{trigger:el,start:'top 86%',toggleActions:'play none none none'}});
-      });
-    }
-
-    // counter
-    gsap.utils.toArray('[data-count]').forEach(function(el){
-      var end=parseFloat(el.getAttribute('data-count')),suf=el.getAttribute('data-suffix')||'';
-      if(reduced){ el.textContent=end+suf; return; }
-      var o={v:0};
-      ScrollTrigger.create({trigger:el,start:'top 86%',once:true,onEnter:function(){
-        gsap.to(o,{v:end,duration:1.6,ease:'power2.out',onUpdate:function(){el.textContent=Math.round(o.v)+suf;}});
-      }});
+  /* ---------- FAQ: one open at a time ---------- */
+  var qas = $$(".qa");
+  function setOpen(i) {
+    qas.forEach(function (q, k) {
+      var on = k === i, b = $("button", q), a = $(".a", q);
+      q.classList.toggle("open", on); b.setAttribute("aria-expanded", on ? "true" : "false"); a.setAttribute("aria-hidden", on ? "false" : "true");
     });
   }
-})();
-</script>
-<script>
-(function(){
-  var f=document.getElementById('intake-form'); if(!f) return;
-  f.addEventListener('submit',function(e){
-    e.preventDefault();
-    var btn=f.querySelector('.intake-submit'), note=document.getElementById('intake-note');
-    btn.textContent='Sending…'; btn.disabled=true;
-    fetch(f.action,{method:'POST',body:new FormData(f),headers:{'Accept':'application/json'}})
-      .then(function(r){
-        if(r.ok){ f.reset(); btn.style.display='none'; note.hidden=false; }
-        else { throw new Error(); }
-      })
-      .catch(function(){ btn.textContent='Request access'; btn.disabled=false; note.hidden=false; note.style.color='var(--block)'; note.textContent='Something went wrong — email adam.shibli2001@gmail.com'; });
+  qas.forEach(function (q, k) { $("button", q).addEventListener("click", function () { setOpen(q.classList.contains("open") ? -1 : k); }); });
+
+  /* ---------- Scenes ---------- */
+  var scenes = new Map(), done = new WeakSet();
+  function howAnims(L, r, n) {
+    var g = function (s) { return r.querySelector('[data-a="' + s + '"]'); }, gg = function (s) { return $$('[data-a="' + s + '"]', r); };
+    if (n === 1) { draw(L, g("agent"), 600, 0); draw(L, g("line"), 700, 200); mk(L, box(g("bar"), "50% 100%"), [{ transform: "scaleY(0)" }, { transform: "scaleY(1)" }], 600, 300); fade(L, g("barlabel"), 400, 700, 4); fade(L, g("actlabel"), 400, 750, 4); fade(L, g("rabbit"), 500, 500, 8); hops(L, g("pixel"), 290, 3, 1250, 900); openEye(L, g("lid"), 2150); draw(L, g("ground"), 900, 1400); }
+    else if (n === 2) { mk(L, g("soil"), [{ opacity: 0 }, { opacity: 1 }], 500, 0); gg("tun").forEach(function (e, i) { draw(L, e, 520, 150 + i * 260); }); gg("tunIn").forEach(function (e, i) { draw(L, e, 520, 150 + i * 260); }); gg("ch").forEach(function (e, i) { pop(L, e, 380 + i * 260, 380); }); gg("faint").concat(gg("faintIn")).forEach(function (e) { draw(L, e, 500, 900); }); gg("faintCh").forEach(function (e, i) { pop(L, e, 1100 + i * 120, 320); }); fade(L, g("probe"), 400, 250, -6); draw(L, g("pulseMask"), 1400, 1100, "cubic-bezier(.4,0,.4,1)"); pop(L, g("fA"), 900); fade(L, g("lA"), 400, 1000, 4); pop(L, g("fB"), 1650); fade(L, g("lB"), 400, 1750, 4); pop(L, g("fC"), 2350); fade(L, g("lC"), 400, 2450, 4); }
+    else { stamp(L, g("stamp"), 0); thump(L, g("rabbit"), 0); draw(L, g("ret"), 900, 450); mk(L, g("rpx"), [{ transform: "translateX(306px)", opacity: 0 }, { transform: "translateX(306px)", opacity: 1, offset: .08 }, { transform: "translateX(0)", opacity: 1 }], 900, 450, "cubic-bezier(.6,0,.3,1)"); fade(L, g("reason"), 400, 1000, 4); }
+  }
+  var HOWDUR = { 1: 2400, 2: 3000, 3: 1500 };
+
+  function build(k, r) {
+    var L = [], extra = null;
+    var g = function (s) { return r.querySelector('[data-a="' + s + '"]'); }, gg = function (s) { return $$('[data-a="' + s + '"]', r); };
+    if (k === "hero") {
+      $$(".cardback", r).forEach(function (u, i) { var to = getComputedStyle(u).transform; mk(L, u, [{ transform: "none", opacity: 0 }, { transform: to === "none" ? "none" : to, opacity: getComputedStyle(u).opacity }], 500, 200 + i * 120); });
+      extra = heroIntro;
+    } else if (k === "stats") {
+      gg("card").forEach(function (c, i) { fade(L, c, 700, i * 150, 14); });
+      var nums = $$("[data-count]", r), typ = $("[data-type]", r);
+      nums.forEach(function (n) { n.textContent = "0.0%"; }); if (typ) typ.textContent = " ";
+      var count = function (el, to, d, delay) { setTimeout(function () { var t0 = performance.now(); var f = function (now) { var p = clamp((now - t0) / d, 0, 1); el.textContent = (to * (1 - Math.pow(1 - p, 3))).toFixed(1) + "%"; if (p < 1) requestAnimationFrame(f); }; f(t0); }, delay); };
+      var type = function (el, s, delay, st) { setTimeout(function () { var i = 0; var f = function () { i++; el.textContent = s.slice(0, i) || " "; if (i < s.length) setTimeout(f, st); }; f(); }, delay); };
+      extra = function () { nums.forEach(function (n, i) { count(n, +n.getAttribute("data-count"), 1300, 250 + i * 150); }); if (typ) type(typ, typ.getAttribute("data-type"), 700, 80); };
+    }
+    else if (k === "strike") { gg("strike").forEach(function (p) { draw(L, p, 480, 150); }); }
+    else if (k === "receipt") { var d = 120; $$('[data-a="rl"],[data-a="chip"]', r).forEach(function (el) { if (el.getAttribute("data-a") === "chip") { stamp(L, el, d + 60); d += 520; } else { mk(L, el, [{ clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)" }], 360, d, "steps(18,end)"); d += 190; } }); }
+    else if (k === "who") { gg("d").forEach(function (p, i) { draw(L, p, 850, i * 140); }); gg("px").forEach(function (p, i) { pop(L, p, 700 + i * 180); }); }
+    else if (k === "ol") { mk(L, g("ol"), [{ opacity: 0 }, { opacity: 1 }], 80, 0, "linear"); draw(L, g("ol"), 1400, 0, "cubic-bezier(.4,0,.3,1)"); }
+    else if (k === "nest") {
+      var sl = g("slid"); if (sl) mk(L, box(sl, "50% 0"), [{ transform: "scaleY(0)" }, { transform: "scaleY(0)", offset: .55 }, { transform: "scaleY(1)" }], 2000, 500, "ease-in-out");
+      $$('[data-a="zz"] rect', r).forEach(function (q, i) { mk(L, q, [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }], 700, 2600 + i * 450); });
+    }
+    else return null;
+    return { anims: L, play: function () { L.forEach(function (a) { a.play(); }); if (extra) extra(); } };
+  }
+
+  var io = "IntersectionObserver" in window ? new IntersectionObserver(function (es) { es.forEach(function (e) { if (!e.isIntersecting) return; io.unobserve(e.target); var s = scenes.get(e.target); if (s) s.play(); }); }, { threshold: 0.25 }) : null;
+  function setupScene(r, k, eager) { if (done.has(r)) return; done.add(r); if (still) return; var s = build(k, r); if (!s) return; scenes.set(r, s); if (eager) setTimeout(s.play, 450); else if (io) io.observe(r); else s.play(); }
+
+  /* ---------- Example tabs ---------- */
+  var EX = [
+    { action: "delete the secret PROD_DB_URL", block: true, why: "your release workflow uses a secret by this name on every deploy. Deleting it breaks the next release." },
+    { action: "delete the secret LEGACY_EXPORT_KEY", block: false, why: "nothing Rabit can see uses this secret, but the forecast isn't calibrated yet, so a person should look first." }
+  ];
+  var tab = 0, tabs = $$('.ex-tabs [role="tab"]');
+  function pick(i, focus) {
+    tab = i; var ex = EX[i];
+    tabs.forEach(function (b, k) { b.setAttribute("aria-selected", k === i ? "true" : "false"); b.tabIndex = k === i ? 0 : -1; });
+    receipt.setAttribute("aria-labelledby", "ex-" + i);
+    $('[data-r="action"]', receipt).textContent = ex.action;
+    $('[data-r="why"]', receipt).textContent = ex.why;
+    var chip = $('[data-r="verdict"]', receipt); chip.textContent = ex.block ? "BLOCK" : "REVIEW"; chip.className = "chip " + (ex.block ? "block" : "review");
+    if (focus) tabs[i].focus();
+    if (still || !canAnimate) return;
+    if (io) io.unobserve(receipt);
+    var old = scenes.get(receipt); if (old) old.anims.forEach(function (a) { a.cancel(); });
+    var s = build("receipt", receipt); scenes.set(receipt, s); s.play();
+  }
+  tabs.forEach(function (b, k) {
+    b.addEventListener("click", function () { pick(k); });
+    b.addEventListener("keydown", function (e) {
+      var n = null;
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") n = (tab + 1) % tabs.length;
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") n = (tab + tabs.length - 1) % tabs.length;
+      if (e.key === "Home") n = 0; if (e.key === "End") n = tabs.length - 1;
+      if (n !== null) { e.preventDefault(); pick(n, true); }
+    });
   });
+
+  /* ---------- Hero flipbook: scroll flips it on wide screens; on phones it plays when it comes into view ---------- */
+  var FRAMES = 10, ANSWER = 9, RUN = 1000;                     // RUN: px of scroll across the ten cards
+  var CAPS = ["asleep at the gate", "the agent asks", "footsteps", "at the gate", "looking under", "what exists", "what depends on it", "what breaks", "the answer", "your turn"];
+  var HOLD = [0, 1300, 1000, 900, 1000, 1000, 950, 950, 1000, 2200];  // ms each card stays when it plays by itself
+  var cap = $(".flipcap"), cardSvg = card && $("svg", card), countEl = cap && $('[data-a="count"]', cap), capEl = cap && $('[data-a="cap"]', cap),
+      hint = cap && $('[data-a="hint"]', cap), replay = cap && $('[data-a="replay"]', cap), heroStop = $('[data-a="stop"]', hero), cardLink = card && $(".cardlink", card);
+  var frame = still ? ANSWER : 1, stamped = still, playing = false, played = false, pt = 0, manual = 0;
+  function pinned() { return !still && !!hero && hero.offsetHeight - innerHeight > RUN * .6; }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function label(n) { if (countEl) countEl.textContent = pad(n) + " / " + pad(FRAMES); if (capEl) capEl.textContent = CAPS[n - 1]; }
+  function controls() { var pin = pinned(); if (hint) hint.hidden = still || !pin || frame >= FRAMES; if (replay) replay.hidden = still || pin || playing || !played; }
+  function showFrame(n, flick) {
+    n = clamp(n, 1, FRAMES); if (!cardSvg || n === frame) return; frame = n;
+    $$("g[data-f]", cardSvg).forEach(function (g) { g.style.display = g.getAttribute("data-f") === String(n) ? "inline" : "none"; });
+    card.setAttribute("data-last", n === FRAMES ? "1" : "0");
+    label(n); controls();
+    if (flick !== false && canAnimate) card.animate([{ transform: "translate(4px,-4px) rotate(.8deg)" }, { transform: "translate(1px,-1px) rotate(.2deg)" }, { transform: "none" }], { duration: 180, easing: "steps(3,end)", composite: "add" });
+    if (n >= ANSWER && !stamped) { stamped = true; if (heroStop) { var T = []; stamp(T, heroStop, 200); heroStop.style.opacity = 1; T.forEach(function (x) { x.play(); }); } }
+  }
+  function halt() { clearTimeout(pt); playing = false; controls(); }
+  function play() {
+    if (pinned()) return;
+    clearTimeout(pt); playing = true; controls();
+    showFrame(1, frame !== 1);
+    var step = function () { if (frame >= FRAMES) { played = true; halt(); return; } pt = setTimeout(function () { showFrame(frame + 1); step(); }, HOLD[frame]); };
+    step();
+  }
+  function flip(d) { if (still) return; halt(); played = true; manual = performance.now(); showFrame(frame + d); controls(); }
+  function blinkCard() {
+    if (!cardSvg || frame < ANSWER || playing) return; var n = frame, a = $('g[data-f="' + n + '"]', cardSvg), b = $('g[data-f="' + n + 'b"]', cardSvg); if (!a || !b) return;
+    a.style.display = "none"; b.style.display = "inline"; setTimeout(function () { b.style.display = "none"; if (frame === n) a.style.display = "inline"; }, 140);
+  }
+  function syncHero() {                                         // pinned: the card follows the scroll, one card per step so none is skipped
+    if (still || !card || !pinned()) return;
+    if (playing) halt();
+    if (performance.now() - manual < 900) return;
+    var nav = $(".nav"), top = hero.getBoundingClientRect().top + scrollY - (nav ? nav.offsetHeight : 64), p = clamp((scrollY - Math.max(0, top)) / RUN, 0, 1), f = 1 + Math.min(FRAMES - 1, Math.floor(p * FRAMES));
+    if (f !== frame) { showFrame(frame + (f > frame ? 1 : -1)); if (f !== frame) setTimeout(onScroll, 45); }
+  }
+  function heroIntro() {
+    controls();
+    if (pinned() || !card) return;
+    if (!("IntersectionObserver" in window)) { play(); return; }
+    var seen = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting && !played && !playing && !pinned()) { seen.disconnect(); play(); } }); }, { threshold: .6 });
+    seen.observe(card);
+  }
+  if (!still) label(1);
+  if (card && !still) {
+    card.addEventListener("click", function (e) { if (e.target.closest(".cardlink, .ear")) return; flip(1); });
+    card.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && frame === FRAMES && cardLink) { e.preventDefault(); cardLink.click(); return; }
+      if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === " " || e.key === "Enter") { e.preventDefault(); flip(1); }
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") { e.preventDefault(); flip(-1); }
+      if (e.key === "Home") { e.preventDefault(); flip(-FRAMES); } if (e.key === "End") { e.preventDefault(); flip(FRAMES); }
+    });
+    var ear = $(".ear", card); if (ear) ear.addEventListener("click", function (e) { e.stopPropagation(); flip(-1); });
+    if (replay) replay.addEventListener("click", function () { play(); });
+    // the stack fans toward the pointer
+    var stk = $("#stack"), u1 = stk && $(".cardback.u1", stk), u2 = stk && $(".cardback.u2", stk);
+    if (stk && matchMedia("(hover: hover)").matches) {
+      stk.addEventListener("mousemove", function (e) { var b = stk.getBoundingClientRect(), dx = (e.clientX - b.left) / b.width - .5, dy = (e.clientY - b.top) / b.height - .5;
+        if (u1) u1.style.transform = "translate(" + (6 + dx * 10) + "px," + (-6 + dy * 10) + "px) rotate(" + (dx * 1.2) + "deg)";
+        if (u2) u2.style.transform = "translate(" + (12 + dx * 20) + "px," + (-12 + dy * 20) + "px) rotate(" + (dx * 2.4) + "deg)";
+        card.style.transform = "translate(" + (-dx * 4) + "px," + (-dy * 4) + "px) rotate(" + (dx * .8) + "deg)"; });
+      stk.addEventListener("mouseleave", function () { if (u1) u1.style.transform = ""; if (u2) u2.style.transform = ""; card.style.transform = ""; });
+    }
+  }
+
+  $$("[data-scene]").forEach(function (r) { var k = r.getAttribute("data-scene"); if (k === "words") return; setupScene(r, k, k === "hero"); });
+  $$("[data-ch]").forEach(function (r) { setupScene(r, "ol"); });
+
+  /* ---------- How: sticky three-step story ---------- */
+  var how = null;
+  if (howDesk && fig && !still && canAnimate) { how = { L: { 1: [], 2: [], 3: [] }, played: 0, busy: 0, step: 0 }; [1, 2, 3].forEach(function (n) { howAnims(how.L[n], fig, n); }); }
+  function setStep(s) { $$(".step", howDesk).forEach(function (li) { li.style.opacity = (+li.getAttribute("data-step") === s) ? 1 : .3; }); }
+  function playHow(n) { var now = performance.now(), start = Math.max(now, how.busy); how.busy = start + HOWDUR[n]; setTimeout(function () { how.L[n].forEach(function (a) { a.play(); }); }, start - now); }
+
+  var navLid = $(".nav .lid"); if (navLid) box(navLid, "50% 0");
+
+  /* ---------- Words ---------- */
+  var words = $('[data-scene="words"]'); if (words && !still) words.classList.add("arm");
+
+  /* ---------- Tunnels + runner ---------- */
+  var tuns = $$("[data-tunnel]"), tunClips = tuns.map(function (t) { return $("[data-clip]", t); });
+  if (!still) tunClips.forEach(function (c) { if (c) c.setAttribute("height", "0"); });
+  var prints = new Set(), fpEls = [];
+  function leave(key, x, y, dir) { if (prints.has(key) || !pg) return; prints.add(key); var d = document.createElement("div"); d.className = "fp"; d.setAttribute("aria-hidden", "true"); d.innerHTML = "<i></i><i></i>"; d.style.left = (x - 8 - dir * 6) + "px"; d.style.top = (y - 4) + "px"; pg.appendChild(d); fpEls.push(d); }
+  addEventListener("resize", function () { fpEls.forEach(function (d) { d.remove(); }); fpEls = []; prints.clear(); });
+
+  /* ---------- Labels stamp their tracks; headlines rise word by word ---------- */
+  if (!still && io && canAnimate) {
+    var io2 = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return; io2.unobserve(e.target); var t = e.target;
+        if (t.classList.contains("kicker")) { t.classList.add("in"); return; }
+        var L = []; $$(".rw > span", t).forEach(function (w, i) { w.style.transform = ""; mk(L, w, [{ transform: "translateY(110%)" }, { transform: "translateY(0)" }], 760, i * 38, "cubic-bezier(.2,.7,.1,1)"); });
+        var st = $(".stop", t); if (st) stamp(L, st, 120 + $$(".rw", t).length * 38 + 300);
+        L.forEach(function (a) { a.play(); });
+      });
+    }, { threshold: 0.35 });
+    $$(".kicker").forEach(function (k) { k.classList.add("arm"); io2.observe(k); });
+    $$("h2.h2, .close-h").forEach(function (h) {
+      var nodes = Array.prototype.slice.call(h.childNodes); h.textContent = "";
+      nodes.forEach(function (n) {
+        if (n.nodeType !== 3) { h.appendChild(n); return; }
+        n.textContent.split(/(\s+)/).forEach(function (part) {
+          if (!part) return; if (/^\s+$/.test(part)) { h.appendChild(document.createTextNode(" ")); return; }
+          var o = document.createElement("span"), i = document.createElement("span"); o.className = "rw"; i.textContent = part; o.appendChild(i); h.appendChild(o);
+        });
+      });
+      $$(".rw > span", h).forEach(function (w) { w.style.transform = "translateY(110%)"; });
+      io2.observe(h);
+    });
+  }
+
+  /* ---------- Scroll ---------- */
+  function tick() {
+    var vh = innerHeight, ref = vh * .5;
+    syncHero();
+    // nav rabbit: eye open at the top, half-lidded through the page, shut by the nest
+    if (navLid && !still) { var se = document.scrollingElement || root, depth = clamp(scrollY / Math.max(1, se.scrollHeight - vh), 0, 1), v = "scaleY(" + (depth > .93 ? 1 : depth > .5 ? .45 : 0) + ")"; if (navLid.style.transform !== v) navLid.style.transform = v; }
+    if (words) { var ws = $$("[data-w]", words), rc = words.getBoundingClientRect(); var p = still ? 1 : clamp((vh * .88 - rc.top) / (vh * .42), 0, 1); ws.forEach(function (w, i) { var o = (i + 1) / ws.length <= p + 1e-6 ? "1" : "0.22"; if (w.style.opacity !== o) w.style.opacity = o; }); if (p >= 1) words.classList.add("done"); }
+    // runner along the tunnels
+    if (runner && pg && !still) {
+      var act = null, ar = null, ai = -1;
+      tuns.forEach(function (t, i) { if (getComputedStyle(t).display === "none") return; var r = t.getBoundingClientRect(); if (r.height < 2) return; var q = clamp((ref - r.top) / r.height, 0, 1); if (tunClips[i]) { var hv = (q * 140).toFixed(1); if (tunClips[i].getAttribute("height") !== hv) tunClips[i].setAttribute("height", hv); } if (r.top <= ref) { act = t; ar = r; ai = i; } });
+      var nestR = nest ? nest.getBoundingClientRect() : null;
+      if (!act || (nestR && nestR.top < vh * .7)) { runner.style.opacity = 0; runner.style.visibility = "hidden"; }
+      else {
+        var path = act.querySelector("path"), pr = pg.getBoundingClientRect();
+        var q = clamp((ref - ar.top) / ar.height, 0, 1), Ln = path.getTotalLength(), pt = path.getPointAtLength(q * Ln), p2 = path.getPointAtLength(Math.min(Ln, q * Ln + 1));
+        var toPg = function (s) { var gp = path.getPointAtLength(s * Ln); return [ar.left - pr.left + gp.x / 100 * ar.width, ar.top - pr.top + gp.y / 100 * ar.height]; };
+        var x = ar.left - pr.left + pt.x / 100 * ar.width, y = ar.top - pr.top + pt.y / 100 * ar.height;
+        var hopsN = 3, lift = q < 1 ? Math.abs(Math.sin(q * Math.PI * hopsN)) * 14 : 0, dir = (p2.x - pt.x) < -0.01 ? -1 : 1;
+        var squash = q < 1 && Math.abs(Math.sin(q * Math.PI * hopsN)) < .18 ? " scale(1.08,.9)" : "";
+        runner.style.opacity = 1; runner.style.visibility = "visible"; runner.style.transform = "translate(" + (x - 19) + "px," + (y - 34 - lift) + "px) scaleX(" + dir + ")" + squash;
+        for (var k = 1; k < hopsN; k++) if (q >= k / hopsN) { var pp = toPg(k / hopsN); leave(ai + "-" + k, pp[0], pp[1], dir); }
+      }
+    }
+    // sticky how
+    if (how && howDesk) {
+      var hrc = howDesk.getBoundingClientRect(), sticky = getComputedStyle(howDesk.firstElementChild).position === "sticky", s;
+      if (sticky) { var span = hrc.height - vh, hp2 = span > 0 ? -hrc.top / span : 1; s = hrc.top < vh * .45 ? (hp2 > .62 ? 3 : hp2 > .3 ? 2 : 1) : 0; }
+      else { s = hrc.top < vh * .6 ? 3 : 0; }
+      var a = Math.max(1, s); if (sticky && a !== how.step) { how.step = a; setStep(a); } else if (!sticky && how.step) { how.step = 0; $$(".step", howDesk).forEach(function (li) { li.style.opacity = ""; }); }
+      while (how.played < s) { how.played++; playHow(how.played); }
+      if (ticket) { var seeR = see.getBoundingClientRect(); ticket.setAttribute("data-stage", seeR.top < vh * .75 ? 0 : Math.min(3, s)); }
+    }
+    // pilot markers
+    if (track) { $$(".pstep", track).forEach(function (li) { var b = li.getBoundingClientRect(); li.classList.toggle("on", still || b.top < vh * .8); }); }
+  }
+  var raf = 0;
+  function onScroll() { if (raf) return; raf = requestAnimationFrame(function () { raf = 0; tick(); }); }
+  addEventListener("scroll", onScroll, { passive: true }); addEventListener("resize", onScroll);
+  tick(); setTimeout(tick, 400);
+
+  /* ---------- Idle life ---------- */
+  if (!still) {
+    setInterval(function () { if (document.hidden) return; if (hero && hero.getBoundingClientRect().bottom > 0) blinkCard(); }, 4600);
+    setInterval(function () { if (document.hidden || !card) return; var ear = $(".ear", card); if (ear && canAnimate) ear.animate([{ transform: "none" }, { transform: "translate(-3px,-3px)" }, { transform: "none" }], { duration: 900, easing: "ease-in-out" }); }, 6000);
+    var sl = $('[data-a="slid"]');
+    if (sl && nest && canAnimate) {
+      var lp = 0; box(sl, "50% 0");
+      var peek = function () { var now = performance.now(); if (now - lp < 1500) return; lp = now; sl.animate([{ transform: "scaleY(1)" }, { transform: "scaleY(0)", offset: .2 }, { transform: "scaleY(0)", offset: .75 }, { transform: "scaleY(1)" }], { duration: 1300, easing: "ease-in-out" }); };
+      nest.addEventListener("mouseenter", peek);
+      setInterval(function () { if (!document.hidden && nest.getBoundingClientRect().top < innerHeight) peek(); }, 8000);
+    }
+  }
 })();
 </script>
 </body>
